@@ -1,0 +1,72 @@
+# LinkedIn Newsletter RSS Integration
+
+We will build a fully automated system that fetches your LinkedIn Newsletter via RSS, stores it in your existing Supabase database, and displays it dynamically on your website using the dark, premium "Case Studies" card style you requested.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Architecture Decision:** You requested a standalone Node.js/Express backend for the cron job. Since you are already using Supabase, we could alternatively use **Supabase Edge Functions** and **Supabase Cron**. This would mean zero extra servers to manage and host. 
+> 
+> *Would you prefer to stick with a separate Node.js server, or should we use the built-in Supabase features to keep everything in one place?*
+
+> [!NOTE]
+> **RSS Feed URL:** We will need the specific RSS feed URL for your LinkedIn newsletter (usually generated via a third-party tool like RSS.app or similar, since LinkedIn doesn't provide native RSS links). Do you already have this URL?
+
+## Proposed Architecture & Changes
+
+### 1. Database (Supabase)
+We will run a SQL script in your Supabase SQL Editor to create the table structure.
+
+#### SQL Schema
+```sql
+CREATE TABLE linkedin_newsletters (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    title TEXT NOT NULL,
+    description TEXT,
+    link TEXT UNIQUE NOT NULL,
+    published_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Allow public read access so the frontend can display them
+ALTER TABLE linkedin_newsletters ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read access" ON linkedin_newsletters FOR SELECT USING (true);
+```
+
+---
+
+### 2. Backend Service (RSS Fetcher)
+*Assuming a standalone Node.js script run on a cron schedule, as initially requested.*
+
+- **Dependencies:** `node-fetch`, `rss-parser`, `@supabase/supabase-js`, `node-cron`
+- **Logic:**
+  1. Fetch the RSS XML.
+  2. Parse the items.
+  3. For each item, run an `UPSERT` (or `INSERT ON CONFLICT`) against the `link` column in Supabase to avoid duplicates.
+  4. Schedule the script to run every 30 minutes.
+
+---
+
+### 3. Frontend Implementation (Your Website)
+We will modify your existing HTML/JS files to dynamically pull and display this data.
+
+#### [MODIFY] main.html (or index.html)
+- Add a new section container with standard section padding.
+- Include a heading mirroring the format "Results That Speak".
+- Add an empty container `div` with the CSS grid classes used for your case study cards.
+
+#### [MODIFY] database.js (or main.js)
+- Add a function `fetchNewsletters()` that calls Supabase on page load.
+- Loop through the returned rows and dynamically generate the HTML for the dark green cards.
+- **Card Design:** Will perfectly mimic the screenshot provided (dark green background, badge, bold white title, lighter grey description, and a link/button to read the full post).
+- Add loading and error fallback states.
+
+## Verification Plan
+
+### Automated Tests
+- N/A for this scope, though we will do thorough manual testing.
+
+### Manual Verification
+1. Run the backend script locally and verify rows are populated in Supabase.
+2. Run the script a second time to ensure duplicate links are discarded.
+3. Open the website and verify the cards load quickly, wrap correctly on mobile, and precisely match the "Case Studies" design aesthetic.

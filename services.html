@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Full-Stack Growth Services</title>
+    <meta name="description"
+        content="Explore our full-stack growth services including Performance Marketing, Growth Analytics, Brand Strategy, and Content & SEO." />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap"
+        rel="stylesheet" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        charcoal: '#0F1115',
+                        emerald: { DEFAULT: '#00E676', dark: '#00C853', glow: 'rgba(0,230,118,0.25)' },
+                        softwhite: '#EAEAEA',
+                    },
+                    fontFamily: { inter: ['Inter', 'sans-serif'] },
+                    boxShadow: {
+                        card: '0 20px 40px rgba(0,0,0,0.25)',
+                        glow: '0 0 40px rgba(0,230,118,0.35), 0 20px 40px rgba(0,0,0,0.4)',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* ── Base Reset ────────────────────────────────────────── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F1115;
+            color: #EAEAEA;
+            min-height: 300vh;
+            /* extra scroll space for ScrollTrigger demo */
+        }
+
+        /* ── Scrollbar ─────────────────────────────────────────── */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0F1115;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00E676;
+            border-radius: 99px;
+        }
+
+        /* ── Hero filler ───────────────────────────────────────── */
+        .hero-filler {
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* ── Card base ─────────────────────────────────────────── */
+        .service-card {
+            position: absolute;
+            width: 280px;
+            padding: 2rem;
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+            transition:
+                box-shadow 0.35s ease,
+                border-color 0.35s ease;
+            will-change: transform, opacity;
+            /* initial hidden state */
+            opacity: 0;
+        }
+
+        .service-card:hover {
+            box-shadow: 0 0 40px rgba(0, 230, 118, 0.35), 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(0, 230, 118, 0.4);
+        }
+
+        /* ── Perspective container ─────────────────────────────── */
+        .card-stage {
+            perspective: 1200px;
+            perspective-origin: 50% 40%;
+        }
+
+        /* ── Grid layout (applied after scroll trigger) ────────── */
+        .cards-wrapper.grid-mode {
+            position: relative !important;
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .cards-wrapper.grid-mode .service-card {
+            position: relative !important;
+            width: 100% !important;
+            top: auto !important;
+            left: auto !important;
+            transform: none !important;
+        }
+
+        /* Tablet */
+        @media (max-width: 1024px) {
+            .cards-wrapper.grid-mode {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Mobile: immediate grid, no sticky animation */
+        @media (max-width: 640px) {
+            .cards-wrapper {
+                position: relative !important;
+                display: grid !important;
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+
+            .service-card {
+                position: relative !important;
+                width: 100% !important;
+                top: auto !important;
+                left: auto !important;
+                transform: none !important;
+                opacity: 1 !important;
+            }
+        }
+
+        /* ── Floating ambient orbs ─────────────────────────────── */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Badge pill ────────────────────────────────────────── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(0, 230, 118, 0.35);
+            background: rgba(0, 230, 118, 0.08);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: #00E676;
+            text-transform: uppercase;
+        }
+
+        /* ── Icon circle ───────────────────────────────────────── */
+        .icon-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(0, 230, 118, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        /* ── Stacked layout helpers ────────────────────────────── */
+        .stacked-container {
+            position: relative;
+            height: 340px;
+            /* enough to show the stacked pile */
+        }
+
+        /* ── Gradient text ─────────────────────────────────────── */
+        .gradient-text {
+            background: linear-gradient(135deg, #EAEAEA 0%, #00E676 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── Animated underline on heading ────────────────────── */
+        .heading-line {
+            display: block;
+            height: 3px;
+            width: 60px;
+            background: linear-gradient(90deg, #00E676, transparent);
+            border-radius: 99px;
+            margin: 1rem auto 0;
+        }
+
+        /* ── Scroll progress bar ───────────────────────────────── */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00E676, #00C853);
+            z-index: 9999;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+
+    <!-- Progress bar -->
+    <div id="progress-bar"></div>
+
+    <!-- ══════════════════════════════════════════════════════════
+       HERO FILLER  (so the section is off-screen on load)
+  ══════════════════════════════════════════════════════════════ -->
+    <div class="hero-filler">
+        <div class="text-center px-6">
+            <p class="text-sm font-medium tracking-widest uppercase text-[#00E676] mb-4">Scroll down</p>
+            <h1 class="text-5xl md:text-7xl font-black text-[#EAEAEA] leading-tight">
+                Grow <span class="gradient-text">Smarter.</span>
+            </h1>
+            <p class="mt-4 text-[#EAEAEA]/50 max-w-md mx-auto text-lg">
+                We build systems that scale — scroll to see our services.
+            </p>
+            <!-- Animated scroll cue -->
+            <div class="mt-12 flex flex-col items-center gap-2">
+                <div class="w-5 h-8 rounded-full border-2 border-[#00E676]/40 flex justify-center pt-1.5">
+                    <div id="scrollDot" class="w-1 h-1.5 bg-[#00E676] rounded-full"></div>
+                </div>
+                <span class="text-xs text-[#EAEAEA]/30 tracking-widest uppercase">scroll</span>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════
+       SERVICES SECTION  — the main animated block
+  ══════════════════════════════════════════════════════════════ -->
+    <section class="services-section relative overflow-hidden py-28 px-6" style="background-color: #0F1115;">
+
+        <!-- Ambient orbs -->
+        <div class="orb w-96 h-96 bg-[#00E676] opacity-[0.06] top-[-5rem] left-[-5rem]"></div>
+        <div class="orb w-72 h-72 bg-[#00E676] opacity-[0.04] bottom-[-4rem] right-[-4rem]"></div>
+
+        <div class="relative z-10 max-w-6xl mx-auto">
+
+            <!-- ── Section Header ──────────────────────────────── -->
+            <div class="text-center mb-20" id="section-header">
+                <!-- Badge -->
+                <div class="badge mb-6">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-[#00E676] animate-pulse"></span>
+                    What We Do
+                </div>
+
+                <!-- Heading -->
+                <h2 class="text-4xl md:text-6xl font-black text-[#EAEAEA] leading-tight tracking-tight">
+                    Full-Stack<br />
+                    <span class="gradient-text">Growth Services</span>
+                </h2>
+                <span class="heading-line"></span>
+
+                <!-- Subtext -->
+                <p class="mt-6 text-[#EAEAEA]/55 max-w-xl mx-auto text-base md:text-lg leading-relaxed">
+                    End-to-end solutions engineered to turn your brand into a
+                    <strong class="text-[#EAEAEA]/80 font-semibold">compounding growth engine</strong>.
+                    We don't just run campaigns — we build systems.
+                </p>
+            </div>
+
+            <!-- ── Cards Stage ─────────────────────────────────── -->
+            <!--
+        .card-stage    → perspective wrapper
+        .cards-wrapper → becomes absolute for stacked layout,
+                         then transitions to CSS grid on scroll
+      -->
+            <div class="card-stage">
+                <div class="cards-wrapper relative flex items-center justify-center stacked-container"
+                    id="cardsWrapper">
+
+                    <!-- Card 1: Performance Marketing -->
+                    <article class="service-card" id="card-1" data-index="0" tabindex="0"
+                        aria-label="Performance Marketing service">
+                        <div class="icon-wrap">
+                            <!-- Rocket icon -->
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00E676"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M4.5 16.5c-1.5 1.5-1.5 3.5 0 5l.5.5c1.5 1.5 3.5 1.5 5 0L21 11a9 9 0 0 0-9-9L1.5 12.5" />
+                                <circle cx="12" cy="12" r="2" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-[#EAEAEA] mb-2">Performance Marketing</h3>
+                        <p class="text-sm text-[#EAEAEA]/55 leading-relaxed">
+                            Data-driven paid media across Meta, Google & TikTok — maximising ROAS with precision
+                            targeting and creative testing.
+                        </p>
+                        <div class="mt-5 flex items-center gap-2">
+                            <span class="text-xs font-semibold text-[#00E676] tracking-wide">Explore →</span>
+                        </div>
+                    </article>
+
+                    <!-- Card 2: Growth Analytics -->
+                    <article class="service-card" id="card-2" data-index="1" tabindex="0"
+                        aria-label="Growth Analytics service">
+                        <div class="icon-wrap">
+                            <!-- Chart icon -->
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00E676"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-[#EAEAEA] mb-2">Growth Analytics</h3>
+                        <p class="text-sm text-[#EAEAEA]/55 leading-relaxed">
+                            Full-funnel attribution, cohort analysis, and real-time dashboards that turn raw data into
+                            revenue-generating insights.
+                        </p>
+                        <div class="mt-5 flex items-center gap-2">
+                            <span class="text-xs font-semibold text-[#00E676] tracking-wide">Explore →</span>
+                        </div>
+                    </article>
+
+                    <!-- Card 3: Brand Strategy -->
+                    <article class="service-card" id="card-3" data-index="2" tabindex="0"
+                        aria-label="Brand Strategy service">
+                        <div class="icon-wrap">
+                            <!-- Diamond icon -->
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00E676"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2" />
+                                <line x1="12" y1="2" x2="12" y2="22" />
+                                <line x1="2" y1="8.5" x2="22" y2="8.5" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-[#EAEAEA] mb-2">Brand Strategy</h3>
+                        <p class="text-sm text-[#EAEAEA]/55 leading-relaxed">
+                            Positioning, visual identity, and messaging frameworks that make your brand immediately
+                            recognisable and impossible to ignore.
+                        </p>
+                        <div class="mt-5 flex items-center gap-2">
+                            <span class="text-xs font-semibold text-[#00E676] tracking-wide">Explore →</span>
+                        </div>
+                    </article>
+
+                    <!-- Card 4: Content & SEO -->
+                    <article class="service-card" id="card-4" data-index="3" tabindex="0"
+                        aria-label="Content and SEO service">
+                        <div class="icon-wrap">
+                            <!-- Search icon -->
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00E676"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                <path d="M8 11h6M11 8v6" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-[#EAEAEA] mb-2">Content &amp; SEO</h3>
+                        <p class="text-sm text-[#EAEAEA]/55 leading-relaxed">
+                            Authority-building content strategy, technical SEO, and link acquisition that compounds
+                            organic traffic month over month.
+                        </p>
+                        <div class="mt-5 flex items-center gap-2">
+                            <span class="text-xs font-semibold text-[#00E676] tracking-wide">Explore →</span>
+                        </div>
+                    </article>
+
+                </div><!-- /cards-wrapper -->
+            </div><!-- /card-stage -->
+
+            <!-- ── Stats Strip ──────────────────────────────────── -->
+            <div id="stats-strip" class="mt-28 grid grid-cols-2 md:grid-cols-4 gap-6 opacity-0">
+                <div class="text-center">
+                    <p class="text-3xl font-black text-[#00E676]">4.8×</p>
+                    <p class="text-xs text-[#EAEAEA]/50 mt-1 uppercase tracking-widest">Avg. ROAS</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-black text-[#00E676]">120+</p>
+                    <p class="text-xs text-[#EAEAEA]/50 mt-1 uppercase tracking-widest">Brands Scaled</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-black text-[#00E676]">$40M+</p>
+                    <p class="text-xs text-[#EAEAEA]/50 mt-1 uppercase tracking-widest">Revenue Generated</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-black text-[#00E676]">98%</p>
+                    <p class="text-xs text-[#EAEAEA]/50 mt-1 uppercase tracking-widest">Retention Rate</p>
+                </div>
+            </div>
+
+        </div><!-- /max-w-6xl -->
+    </section>
+
+    <!-- Extra scroll space for stage 4 demo -->
+    <div style="height: 80vh; display:flex; align-items:center; justify-content:center;">
+        <p class="text-[#EAEAEA]/20 text-sm tracking-widest uppercase">End of section</p>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════
+       GSAP + ScrollTrigger CDNs
+  ══════════════════════════════════════════════════════════════ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script>
+        /* ══════════════════════════════════════════════════════
+           REGISTER PLUGIN
+        ══════════════════════════════════════════════════════ */
+        gsap.registerPlugin(ScrollTrigger);
+
+        /* ══════════════════════════════════════════════════════
+           HELPERS
+        ══════════════════════════════════════════════════════ */
+        const isMobile = () => window.innerWidth <= 640;
+
+        /* ── Scroll dot bounce ──────────────────────────────── */
+        gsap.to('#scrollDot', {
+            y: 14,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            duration: 0.9,
+        });
+
+        /* ── Scroll progress bar ────────────────────────────── */
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const total = document.body.scrollHeight - window.innerHeight;
+            document.getElementById('progress-bar').style.width =
+                ((scrolled / total) * 100).toFixed(2) + '%';
+        });
+
+        /* ══════════════════════════════════════════════════════
+           SKIP ON MOBILE — show cards immediately
+        ══════════════════════════════════════════════════════ */
+        if (isMobile()) {
+            document.querySelectorAll('.service-card').forEach(c => {
+                c.style.opacity = '1';
+                c.style.transform = 'none';
+            });
+        }
+
+        /* ══════════════════════════════════════════════════════
+           DESKTOP ANIMATION PIPELINE
+        ══════════════════════════════════════════════════════ */
+        if (!isMobile()) {
+
+            const cards = gsap.utils.toArray('.service-card');
+            const wrapper = document.getElementById('cardsWrapper');
+
+            /* ── Stacked positions (desktop) ─────────────────── */
+            // Cards pile up like a deck; each is offset slightly.
+            const stackPositions = [
+                { x: -18, y: 8, rotate: -6, zIndex: 1 },
+                { x: -6, y: 4, rotate: -2, zIndex: 2 },
+                { x: 6, y: 0, rotate: 3, zIndex: 3 },
+                { x: 18, y: -4, rotate: 7, zIndex: 4 },
+            ];
+
+            /* ── Grid positions (desktop, 4-col) ─────────────── */
+            // We'll calculate these relative to the wrapper after the stacked
+            // layout has settled, using getBoundingClientRect.
+            function getGridPositions() {
+                const W = wrapper.offsetWidth;
+                const cardW = 280;
+                const gap = 24;
+                const totalW = 4 * cardW + 3 * gap;
+                const startX = (W - totalW) / 2;
+                return cards.map((_, i) => ({
+                    x: startX + i * (cardW + gap),
+                    y: 0,
+                    rotate: 0,
+                    zIndex: i + 1,
+                }));
+            }
+
+            /* ─────────────────────────────────────────────────────
+               STEP 1 — Header fade in
+            ───────────────────────────────────────────────────── */
+            gsap.from('#section-header', {
+                scrollTrigger: {
+                    trigger: '.services-section',
+                    start: 'top 80%',
+                    toggleActions: 'play none none none',
+                },
+                y: 40,
+                opacity: 0,
+                duration: 1,
+                ease: 'power3.out',
+            });
+
+            /* ─────────────────────────────────────────────────────
+               STEP 1 — Cards fall from top + stagger
+            ───────────────────────────────────────────────────── */
+            // Set initial absolute positions (centred) before animation
+            cards.forEach((card, i) => {
+                gsap.set(card, {
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    xPercent: -50,
+                    yPercent: -50,
+                    y: -250,           // start above viewport
+                    rotate: (Math.random() * 16) - 8,
+                    opacity: 0,
+                    zIndex: stackPositions[i].zIndex,
+                    transformOrigin: 'center center',
+                });
+            });
+
+            /* Main fall-in timeline */
+            const fallTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: '.services-section',
+                    start: 'top 70%',
+                    toggleActions: 'play none none none',
+                },
+            });
+
+            cards.forEach((card, i) => {
+                fallTl.to(card, {
+                    y: stackPositions[i].y,
+                    x: stackPositions[i].x,
+                    rotate: stackPositions[i].rotate,
+                    opacity: 1,
+                    duration: 1.1,
+                    ease: 'elastic.out(1, 0.6)',
+                    xPercent: -50,
+                    yPercent: -50,
+                }, i * 0.18); // stagger
+            });
+
+            /* ─────────────────────────────────────────────────────
+               STEP 3 — Hover interactions (stacked phase)
+            ───────────────────────────────────────────────────── */
+            cards.forEach((card, i) => {
+                card.addEventListener('mouseenter', () => {
+                    if (wrapper.classList.contains('grid-mode')) return; // skip in grid mode
+                    gsap.to(card, {
+                        rotate: 0,
+                        scale: 1.05,
+                        zIndex: 10,
+                        duration: 0.35,
+                        ease: 'power2.out',
+                    });
+                });
+                card.addEventListener('mouseleave', () => {
+                    if (wrapper.classList.contains('grid-mode')) return;
+                    gsap.to(card, {
+                        rotate: stackPositions[i].rotate,
+                        scale: 1,
+                        zIndex: stackPositions[i].zIndex,
+                        duration: 0.4,
+                        ease: 'power2.inOut',
+                    });
+                });
+            });
+
+            /* ─────────────────────────────────────────────────────
+               STEP 4 — Stacked → Grid transition on further scroll
+            ───────────────────────────────────────────────────── */
+            ScrollTrigger.create({
+                trigger: '.services-section',
+                start: 'bottom 70%',   // when section bottom passes 70% viewport
+                toggleActions: 'play none none reverse',
+                onEnter: () => spreadToGrid(true),
+                onLeaveBack: () => collapseToStack(true),
+            });
+
+            function spreadToGrid(animate) {
+                const positions = getGridPositions();
+
+                // Expand the stacked container height so grid fits
+                gsap.to(wrapper, { height: 440, duration: 0.6, ease: 'power2.inOut' });
+
+                cards.forEach((card, i) => {
+                    gsap.to(card, {
+                        x: positions[i].x - wrapper.offsetWidth / 2 + 140, // offset from centre
+                        y: 0,
+                        rotate: 0,
+                        scale: 1,
+                        zIndex: i + 1,
+                        xPercent: 0,
+                        yPercent: 0,
+                        top: '50%',
+                        left: 0,
+                        duration: animate ? 0.75 : 0,
+                        ease: 'power3.inOut',
+                        delay: animate ? i * 0.07 : 0,
+                    });
+                });
+            }
+
+            function collapseToStack(animate) {
+                gsap.to(wrapper, { height: 340, duration: 0.5, ease: 'power2.inOut' });
+
+                cards.forEach((card, i) => {
+                    gsap.to(card, {
+                        x: stackPositions[i].x,
+                        y: stackPositions[i].y,
+                        rotate: stackPositions[i].rotate,
+                        xPercent: -50,
+                        yPercent: -50,
+                        left: '50%',
+                        top: '50%',
+                        zIndex: stackPositions[i].zIndex,
+                        scale: 1,
+                        duration: animate ? 0.65 : 0,
+                        ease: 'power3.inOut',
+                        delay: animate ? (cards.length - 1 - i) * 0.07 : 0,
+                    });
+                });
+            }
+
+            /* ─────────────────────────────────────────────────────
+               STATS fade in
+            ───────────────────────────────────────────────────── */
+            gsap.to('#stats-strip', {
+                scrollTrigger: {
+                    trigger: '#stats-strip',
+                    start: 'top 85%',
+                    toggleActions: 'play none none none',
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.9,
+                ease: 'power2.out',
+                stagger: {
+                    each: 0.12,
+                    from: 'start',
+                },
+            });
+
+            /* Number count-up for stats */
+            const statNumbers = document.querySelectorAll('#stats-strip p:first-child');
+            const rawValues = [4.8, 120, 40, 98];
+            const suffixes = ['×', '+', 'M+', '%'];
+            const prefixes = ['', '', '$', ''];
+
+            ScrollTrigger.create({
+                trigger: '#stats-strip',
+                start: 'top 85%',
+                once: true,
+                onEnter: () => {
+                    rawValues.forEach((val, i) => {
+                        gsap.fromTo(
+                            { v: 0 },
+                            { v: val },
+                            {
+                                duration: 1.8,
+                                ease: 'power2.out',
+                                delay: i * 0.12,
+                                onUpdate() {
+                                    statNumbers[i].textContent =
+                                        prefixes[i] +
+                                        (Number.isInteger(val) ? Math.round(this.targets()[0].v) : this.targets()[0].v.toFixed(1)) +
+                                        suffixes[i];
+                                },
+                            }
+                        );
+                    });
+                },
+            });
+
+        } /* end !isMobile() */
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- 🔒 Intro gate: if user reloads or directly visits main.html,
+       redirect back to the cinematic intro on index.html -->
+    <script>
+        (function () {
+            var flag = sessionStorage.getItem('stratify_intro_done');
+            if (!flag) {
+                // No intro flag → send to intro page
+                window.location.replace('index.html');
+            } else {
+                // Consume the flag so the next reload also goes to intro
+                sessionStorage.removeItem('stratify_intro_done');
+            }
+        })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STRATIFY – Premium Growth Agency</title>
+    <meta name="description"
+        content="STRATIFY is a premium hybrid marketing agency that engineers growth strategies to scale your brand to new heights." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,900&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="hero.css" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Smooth arrival from white boom flash — opacity only, no position shift */
+        body {
+            animation: page-arrive 0.5s ease both;
+        }
+
+        @keyframes page-arrive {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+    <!-- GSAP + ScrollTrigger + Flip -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════════ -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-mark">S</span>
+                <span class="logo-text">STRATIFY</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#newsletters">Newsletter</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#insights">Insights</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="signup.html" class="btn btn-primary nav-cta">Connect Us</a>
+            <button class="hamburger" id="hamburger" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <ul>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#newsletters">Newsletter</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#insights">Insights</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="signup.html" class="btn btn-primary">Connect Us</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════
+       HERO SECTION
+  ═══════════════════════════════════════════ -->
+    <section class="main-hero section-dark animate-section" data-animation-duration="2500" id="home">
+        <div class="hero-bg-grid"></div>
+        <div class="hero-glow-top"></div>
+        <div class="main-hero-inner">
+            <div class="hero-content" data-aos="fade-up">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span>● AI DATA INTELLIGENCE · EST. 2026</span>
+                </div>
+                <h1 class="hero-headline">
+                    We Turn Your SaaS Data Into<br />
+                    <em class="headline-accent">Decisions</em><br />
+                    That Drive Growth.
+                </h1>
+                <p class="hero-sub">
+                    STRATIFY fuses your internal metrics, AI-powered diagnosis, and real-time market intelligence 
+                    to give Seed-to-Series A founders the clarity they need to scale
+                </p>
+                <div class="hero-actions">
+                    <a href="#cta" class="btn btn-primary btn-lg ripple">
+                        <span>Start Your Growth</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+
+            </div>
+            <!-- Right orb -->
+            <div class="hero-visual" data-aos="fade-left">
+                <div class="glass-dashboard-wrapper">
+                    <!-- Ambient Glow Behind -->
+                    <div class="glass-ambient-glow"></div>
+
+                    <!-- Main Dashboard Panel -->
+                    <div class="glass-main-panel">
+                        <div class="glass-main-inner">
+                            <div class="glass-main-front">
+                                <div class="glass-header">
+                                    <div class="mac-dots">
+                                        <span class="dot red"></span>
+                                        <span class="dot yellow"></span>
+                                        <span class="dot green"></span>
+                                    </div>
+                                    <div class="glass-title">Stratify Analytics</div>
+                                </div>
+                                <div class="glass-body">
+                                    <div class="chart-container">
+                                        <!-- Minimal SVG Line Chart -->
+                                        <svg viewBox="0 0 400 150" class="glass-chart" preserveAspectRatio="none">
+                                            <defs>
+                                                <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stop-color="rgba(110, 203, 138, 0.4)" />
+                                                    <stop offset="100%" stop-color="rgba(110, 203, 138, 0)" />
+                                                </linearGradient>
+                                                <filter id="glow">
+                                                    <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                                                    <feMerge>
+                                                        <feMergeNode in="coloredBlur" />
+                                                        <feMergeNode in="SourceGraphic" />
+                                                    </feMerge>
+                                                </filter>
+                                            </defs>
+                                            <path class="chart-area"
+                                                d="M0,150 L0,110 Q50,130 100,80 T200,60 T300,30 T400,10 L400,150 Z"
+                                                fill="url(#chartGrad)" />
+                                            <path class="chart-line" d="M0,110 Q50,130 100,80 T200,60 T300,30 T400,10"
+                                                fill="none" stroke="#6ECB8A" stroke-width="3" filter="url(#glow)" />
+                                        </svg>
+                                    </div>
+                                    <!-- Mini Info Cards Inside -->
+                                    <div class="glass-metrics">
+                                        <div class="metric">
+                                            <span class="m-label">Users</span>
+                                            <span class="m-val">24.5k</span>
+                                        </div>
+                                        <div class="metric">
+                                            <span class="m-label">Conversion</span>
+                                            <span class="m-val">8.2%</span>
+                                        </div>
+                                        <div class="metric">
+                                            <span class="m-label">Active</span>
+                                            <span class="m-val green">● Now</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="glass-main-back">
+                                <span class="welcome-msg-large">Welcome</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Glass Widgets -->
+                    <div class="glass-float widget-a">
+                        <div class="fc-icon"><img
+                                src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236ECB8A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='22 7 13.5 15.5 8.5 10.5 2 17'></polyline><polyline points='16 7 22 7 22 13'></polyline></svg>"
+                                width="24" alt="chart"></div>
+                        <div class="fc-body">
+                            <span class="fc-val">+340%</span>
+                            <span class="fc-label">Revenue Growth</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-float widget-b">
+                        <div class="fc-icon"><img
+                                src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234aaa6e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'></circle><circle cx='12' cy='12' r='6'></circle><circle cx='12' cy='12' r='2'></circle></svg>"
+                                width="24" alt="target"></div>
+                        <div class="fc-body">
+                            <span class="fc-val">4.8×</span>
+                            <span class="fc-label">ROAS Average</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-float widget-c">
+                        <div class="fc-icon"><img
+                                src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f5a623' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='13' r='8'></circle><polyline points='12 9 12 13 14 15'></polyline><line x1='12' y1='2' x2='12' y2='3'></line><line x1='9' y1='2' x2='15' y2='2'></line></svg>"
+                                width="24" alt="stopwatch"></div>
+                        <div class="fc-body">
+                            <span class="fc-val">12 Wks</span>
+                            <span class="fc-label">To First Results</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+       SERVICES INTRO (static page above)
+  ═══════════════════════════════════════════ -->
+    <section class="services-intro section-light animate-section" data-animation-duration="1500">
+        <div class="svc-intro-inner">
+            <div class="svc-intro-left" data-aos="fade-right">
+                <span class="svc-tag">What We Do</span>
+                <h2 class="svc-title">
+                    <span class="svc-line">Full-Stack</span>
+                    <span class="svc-line">SaaS Intelligence</span>
+                </h2>
+            </div>
+            <div class="svc-intro-right" data-aos="fade-left" data-aos-delay="80">
+                <p class="svc-sub svc-intro-sub">From raw metrics to revenue clarity —<br>every layer of your business, decoded.</p>
+                <ul class="svc-compact-list">
+                    <li class="svc-compact-item" data-aos="fade-up" data-aos-delay="60">
+                        <span class="svc-compact-index">01</span>
+                        <span class="svc-compact-title">Internal Data Analysis</span>
+                    </li>
+                    <li class="svc-compact-item" data-aos="fade-up" data-aos-delay="110">
+                        <span class="svc-compact-index">02</span>
+                        <span class="svc-compact-title">AI Consultant Diagnosis</span>
+                    </li>
+                    <li class="svc-compact-item" data-aos="fade-up" data-aos-delay="160">
+                        <span class="svc-compact-index">03</span>
+                        <span class="svc-compact-title">Market &amp; Competitor Intelligence</span>
+                    </li>
+                    <li class="svc-compact-item" data-aos="fade-up" data-aos-delay="210">
+                        <span class="svc-compact-index">04</span>
+                        <span class="svc-compact-title">Benchmark &amp; Raise Readiness</span>
+                    </li>
+                </ul>
+                <div class="svc-compact-footnote" data-aos="fade-up" data-aos-delay="260">
+                    <span class="svc-compact-arrow">↓</span>
+                    <span class="svc-compact-copy">Scroll to explore</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+       SERVICES: MAIN CARDS
+  ═══════════════════════════════════════════ -->
+    <section class="svc-vault section-light animate-section" data-animation-duration="1800" id="services">
+        <div class="svc-stage" id="svcStage">
+
+            <!-- LEFT: Header (types itself in during Act 1) -->
+            <div class="svc-hdr" id="svcHdr">
+                <span class="svc-tag pill-tag" id="svcTag">What We Do</span>
+                <h2 class="svc-title" id="svcTitle">Full-Stack SaaS Intelligence</h2>
+                <p class="svc-sub" id="svcSub">From raw metrics to revenue clarity — every layer of your business, decoded.</p>
+            </div>
+
+            <!-- RIGHT: Cards -->
+            <div class="svc-cards-wrap" id="svcCardsWrap">
+                <div class="svc-card" id="svcCard1">
+                    <div class="svc-card-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="6" width="40" height="28" rx="4" ry="4"></rect>
+                            <line x1="16" y1="42" x2="32" y2="42"></line>
+                            <line x1="24" y1="34" x2="24" y2="42"></line>
+                        </svg>
+                    </div>
+                    <div class="svc-card-body">
+                        <h3>Internal Data Analysis</h3>
+                        <p>Connect your MRR, churn, CAC, and LTV into one unified view. Know exactly where you're
+                            leaking revenue — before your investors ask.</p>
+                        <a href="#contact" class="svc-link">Explore Service <span>→</span></a>
+                    </div>
+                </div>
+
+                <div class="svc-card" id="svcCard2">
+                    <div class="svc-card-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 4c-5.5 0-10 4.5-10 10 0 2.5 1 4.8 2.5 6.5-1.5 1.7-2.5 4-2.5 6.5 0 5.5 4.5 10 10 10h2V4h-2z" />
+                            <path d="M29 4c5.5 0 10 4.5 10 10 0 2.5-1 4.8-2.5 6.5 1.5 1.7 2.5 4 2.5 6.5 0 5.5-4.5 10-10 10h-2V4h2z" />
+                        </svg>
+                    </div>
+                    <div class="svc-card-body">
+                        <h3>AI Consultant Diagnosis</h3>
+                        <p>Three specialized AI models — Assistant, Analyst, and Consultant — that don't just surface
+                            numbers. They tell you what to do next.</p>
+                        <a href="#contact" class="svc-link">Explore Service <span>→</span></a>
+                    </div>
+                </div>
+
+                <div class="svc-card" id="svcCard3">
+                    <div class="svc-card-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="24" cy="24" r="20" />
+                            <line x1="4" y1="24" x2="44" y2="24" />
+                            <path d="M24 4c7.5 12 7.5 28 0 40M24 4C16.5 16 16.5 32 24 44" />
+                        </svg>
+                    </div>
+                    <div class="svc-card-body">
+                        <h3>Market &amp; Competitor Intelligence</h3>
+                        <p>Real-time signals on your category, your competitors, and the market trends shaping your next
+                            funding round.</p>
+                        <a href="#contact" class="svc-link">Explore Service <span>→</span></a>
+                    </div>
+                </div>
+
+                <div class="svc-card" id="svcCard4">
+                    <div class="svc-card-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="36" y1="40" x2="36" y2="20" />
+                            <line x1="24" y1="40" x2="24" y2="8" />
+                            <line x1="12" y1="40" x2="12" y2="28" />
+                        </svg>
+                    </div>
+                    <div class="svc-card-body">
+                        <h3>Benchmark &amp; Raise Readiness</h3>
+                        <p>Know where you stand against category benchmarks. Get a Growth Score and a Raise Ready Pack —
+                            built for your next investor conversation.</p>
+                        <a href="#contact" class="svc-link">Explore Service <span>→</span></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════
+       SCROLL REVEAL WRAPPER (Curtain Effect)
+    ═══════════════════════════════════════════ -->
+    <div id="scroll-reveal-wrap" style="position: relative; overflow: hidden;">
+        <!-- ═══════════════════════════════════════════
+           STATS STRIP
+        ═══════════════════════════════════════════ -->
+        <section class="stats-strip section-dark animate-section" data-animation-duration="1400" 
+                 style="position: absolute; top: 0; left: 0; width: 100%; z-index: 2;">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item" data-aos="fade-up" data-aos-delay="0">
+                        <div class="stat-accent-line"></div>
+                        <div class="stat-val" data-target="200">0</div>
+                        <div class="stat-unit">+</div>
+                        <div class="stat-label">Brands Scaled</div>
+                    </div>
+                    <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-accent-line"></div>
+                        <div class="stat-val" data-target="4.8">0</div>
+                        <div class="stat-unit">×</div>
+                        <div class="stat-label">Avg. ROAS Delivered</div>
+                    </div>
+                    <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-accent-line"></div>
+                        <div class="stat-val" data-target="340">0</div>
+                        <div class="stat-unit">%</div>
+                        <div class="stat-label">Avg. Revenue Growth</div>
+                    </div>
+                    <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+                        <div class="stat-accent-line"></div>
+                        <div class="stat-val" data-target="98">0</div>
+                        <div class="stat-unit">%</div>
+                        <div class="stat-label">Client Retention Rate</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════
+           NEWSLETTERS
+        ═══════════════════════════════════════════ -->
+        <section class="work section-light animate-section" data-animation-duration="1800" id="newsletters"
+            style="padding-bottom: 60px; position: relative; z-index: 1;">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">LinkedIn Newsletters</span>
+                    <h2 class="section-title">Latest Insights</h2>
+                    <p class="section-sub">Where capital meets clarity. Insights directly from our CEO.</p>
+                </div>
+
+                <div class="work-grid" id="newsletter-grid">
+                    <!-- Javascript will populate this with the latest newsletters -->
+                    <p style="text-align: center; width: 100%; color: var(--gray-500); grid-column: 1 / -1;">Loading
+                        latest
+                        newsletters...</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="#" target="_blank" class="btn btn-primary btn-lg" id="linkedinProfileLink"
+                        style="padding-left: 2rem; padding-right: 2rem;">Read More Posts on LinkedIn</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+       ABOUT (Canvas Ink Reveal)
+  ═══════════════════════════════════════════ -->
+    <div id="about" style="position: relative; top: -100px;"></div>
+    <div id="txWrap">
+        <div id="stage">
+
+            <!-- SECTION 2: The Revealed Content -->
+            <div id="s2">
+                <div class="aLeft">
+                    <span class="aBadge">ABOUT STRATIFY</span>
+                    <div style="margin-bottom:22px">
+                        <div class="headline-line"><span class="headline-inner" style="transition-delay:0.05s">Built by Founders.</span></div>
+                        <div class="headline-line"><span class="headline-inner" style="transition-delay:0.18s">Not Data Vendors.</span></div>
+                    </div>
+                    <p class="body-reveal" style="transition-delay:0.5s">STRATIFY was built by people who sat in the founder seat — and felt the exact pain of making high-stakes decisions with incomplete, unstructured data.</p>
+                    <p class="body-reveal" style="transition-delay:0.64s">No bloated dashboards. No vague reports. Just AI-powered intelligence that's always tied to a revenue or growth outcome.</p>
+                    <div class="feat" style="transition-delay:0.75s">
+                        <div class="fTitle"><span class="dot"></span>Radical Transparency</div>
+                        <div class="fDesc">Every insight comes with the data behind it. No black boxes.</div>
+                    </div>
+                    <div class="feat" style="transition-delay:0.85s">
+                        <div class="fTitle"><span class="dot"></span>Founder-First Design</div>
+                        <div class="fDesc">Built for Seed-to-Series A SaaS teams who move fast and need clarity faster.</div>
+                    </div>
+                    <div class="feat" style="transition-delay:0.95s">
+                        <div class="fTitle"><span class="dot"></span>Outcome Obsession</div>
+                        <div class="fDesc">Every feature maps to one question: does this help you grow or raise?</div>
+                    </div>
+                </div>
+
+                <div class="aRight">
+                    <div class="ring r1" style="transition-delay:0.6s"></div>
+                    <div class="ring r2" style="transition-delay:0.7s"></div>
+                    <div class="sCard" style="top:-25px;right:-35px;transition-delay:0.82s">
+                        <div class="sNum">3</div>
+                        <div class="sLbl">AI Models Purpose-Built for SaaS</div>
+                    </div>
+                    <div class="sCard" style="bottom:10px;left:-40px;transition-delay:0.96s">
+                        <div class="sNum">50+</div>
+                        <div class="sLbl">SaaS Metrics Tracked</div>
+                    </div>
+                    <div class="sCard" style="bottom:-60px;right:20px;transition-delay:1.1s; width: auto; max-width: 200px;">
+                        <div class="sNum" style="font-size: 1rem; line-height: 1.2;">Wall Street frameworks →</div>
+                        <div class="sLbl">adapted for founders</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- "ABOUT STRATIFY" floating on dark ink — ABOVE canvas -->
+            <div id="floatingLabel">
+                <div class="fl-badge">ABOUT STRATIFY</div>
+                <div class="fl-title">Built by Founders. <br>Not Data Vendors.</div>
+            </div>
+
+            <!-- INK CANVAS -->
+            <canvas id="inkCanvas"></canvas>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+       INSIGHTS
+  ═══════════════════════════════════════════ -->
+    <section class="insights section-light animate-section" data-animation-duration="1400" id="insights">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">INSIGHTS</span>
+                <h2 class="section-title">The Intelligence Lab</h2>
+                <p class="section-sub">Frameworks and signals from the SaaS trenches — written for founders, not analysts.</p>
+            </div>
+            <div class="insights-grid">
+                <article class="insight-card" data-aos="fade-up" data-aos-delay="0">
+                    <div class="ic-meta">METRICS · 7 MIN READ</div>
+                    <h3>CAC Trends: Growth-Stage Companies 2025</h3>
+                    <p>Understanding the shifting acquisition landscape for the next generation of SaaS leaders.</p>
+                    <a href="https://www.phoenixstrategy.group/blog/cac-trends-growth-stage-companies-2025" target="_blank" class="ic-link">Read Article →</a>
+                </article>
+                <article class="insight-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="ic-meta">GROWTH · 6 MIN READ</div>
+                    <h3>The Barometer: Customer Acquisition Cost Efficiency</h3>
+                    <p>How to benchmark your CAC efficiency against the top 10% of SaaS startups.</p>
+                    <a href="https://thesaasbarometer.substack.com/p/customer-acquisition-cost-efficiency" target="_blank" class="ic-link">Read Article →</a>
+                </article>
+                <article class="insight-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="ic-meta">FUNDRAISING · 5 MIN READ</div>
+                    <h3>The Golden Ratio: Understanding Your LTV/CAC</h3>
+                    <p>Why the LTV/CAC ratio is the ultimate signal for your next funding round.</p>
+                    <a href="https://www.hibob.com/financial-metrics/ltv-cac-ratio/" target="_blank" class="ic-link">Read Article →</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+       FINAL CTA
+  ═══════════════════════════════════════════ -->
+    <section class="final-cta section-dark animate-section" data-animation-duration="1500" id="cta">
+        <div class="fcta-glow"></div>
+        <div class="container">
+            <div class="fcta-inner" data-aos="fade-up">
+                <span class="section-tag tag-light">Let's Talk</span>
+                <h2 class="fcta-headline">Ready to Decode<br />Your Growth?</h2>
+                <p class="fcta-sub">Connect with a STRATIFY partner to audit your SaaS metrics and identify your next revenue unlock — for free.</p>
+                <a href="signup.html" class="btn btn-glow btn-lg ripple">
+                    <span>Connect Us</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+                <p class="fcta-note">Free · No commitment · Results-focused</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════ -->
+    <footer class="footer section-dark" id="contact">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a href="index.html" class="nav-logo">
+                        <span class="logo-mark">S</span>
+                        <span class="logo-text">STRATIFY</span>
+                    </a>
+                    <p class="footer-tagline">Full-Stack SaaS Intelligence for Seed-to-Series A Founders.</p>
+                    <div class="footer-socials">
+                        <a href="#" aria-label="LinkedIn" class="social-icon"><svg viewBox="0 0 24 24"
+                                fill="currentColor">
+                                <path
+                                    d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
+                                <circle cx="4" cy="4" r="2" />
+                            </svg></a>
+                        <a href="#" aria-label="Twitter/X" class="social-icon"><svg viewBox="0 0 24 24"
+                                fill="currentColor">
+                                <path
+                                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                            </svg></a>
+                        <a href="https://www.instagram.com/stratify2026?igsh=MThrM2Q1cGU1NTFpdg==" target="_blank" aria-label="Instagram" class="social-icon"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" />
+                                <circle cx="12" cy="12" r="5" />
+                                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                            </svg></a>
+                    </div>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#services">Internal Data Analysis</a></li>
+                        <li><a href="#services">AI Consultant Diagnosis</a></li>
+                        <li><a href="#services">Market & Competitor Intelligence</a></li>
+                        <li><a href="#services">Benchmark & Raise Readiness</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#work">Case Studies</a></li>
+                        <li><a href="#insights">Insights</a></li>
+                        <li><a href="#cta">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:Stratify2026@gmail.com">Stratify2026@gmail.com</a></li>
+                        <li><a href="tel:+919172915698">+91 9172915698</a></li>
+                        <li><a href="#">Bangaluru, India</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 STRATIFY Agency. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Core SDK (Required) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <!-- Firebase Firestore SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- Firebase Analytics SDK (Optional) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+    
+    <!-- Database Configuration -->
+    <script src="database.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
