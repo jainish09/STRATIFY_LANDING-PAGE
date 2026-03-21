@@ -293,6 +293,10 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
         servicesIntro.style.opacity = '1';
         servicesIntro.style.pointerEvents = 'auto';
         
+        // Ensure child elements (headers, etc) are not hidden by lingering desktop GSAP states
+        const introContent = servicesIntro.querySelectorAll('.svc-title, .svc-sub, .svc-tag, .svc-compact-footnote');
+        gsap.set(introContent, { opacity: 1, y: 0, scale: 1, pointerEvents: 'auto' });
+
         // Hide the vault (cards) section as requested - we use the accordion instead.
         svcVault.style.display = 'none';
 

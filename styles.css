@@ -2154,12 +2154,23 @@ body.intro-complete .tagline-section {
   }
 
   /* Services intro tighter on phones */
+  .services-intro {
+    background: #050605 !important;
+    padding: 80px 0 60px !important;
+  }
+
+  .svc-title, .svc-sub {
+    color: var(--white) !important;
+  }
+
   .svc-compact-item {
     border-radius: 20px !important;
     background: var(--white) !important;
     padding: 20px 20px !important;
     margin-bottom: 16px !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+    opacity: 1 !important; /* Force visibility even if AOS fails */
+    transform: none !important; /* Force visibility even if AOS fails */
   }
 
   .svc-compact-item.accordion-open {
