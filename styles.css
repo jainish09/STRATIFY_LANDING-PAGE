@@ -928,34 +928,47 @@ body.intro-complete .tagline-section {
   color: var(--green-mid);
 }
 
+.svc-compact-icon {
+  width: 32px;
+  height: 32px;
+  color: var(--green-mid);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.svc-compact-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.svc-compact-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
 .svc-compact-index {
   font-family: var(--font);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gray-400);
-  flex-shrink: 0;
+  line-height: 1;
 }
 
 .svc-compact-title {
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.01em;
   color: var(--black);
-  position: relative;
-  padding-left: 2px;
+  font-size: 1rem;
+  line-height: 1.2;
 }
 
-.svc-compact-title::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 0;
-  height: 1.5px;
-  background: linear-gradient(90deg, var(--green), var(--green-bright));
-  border-radius: 999px;
-  transition: width 0.3s var(--ease);
+.svc-compact-item.accordion-open .svc-compact-title {
+  color: var(--green-mid);
 }
 
 .svc-compact-footnote {
@@ -2141,17 +2154,25 @@ body.intro-complete .tagline-section {
   }
 
   /* Services intro tighter on phones */
-  .svc-intro-inner {
-    padding: 0 16px;
-    gap: 24px;
+  .svc-compact-item {
+    border-radius: 20px !important;
+    background: var(--white) !important;
+    padding: 20px 20px !important;
+    margin-bottom: 16px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
   }
 
-  .services-intro {
-    padding: 60px 0 48px;
+  .svc-compact-item.accordion-open {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08) !important;
+    border-color: var(--green-bright) !important;
   }
 
-  .svc-vault {
-    padding: 48px 0;
+  .svc-compact-chevron {
+    display: block !important;
+  }
+
+  .svc-compact-icon {
+    display: flex !important;
   }
 
   /* Hide the aRight visual entirely on very small phones to avoid overflow */
