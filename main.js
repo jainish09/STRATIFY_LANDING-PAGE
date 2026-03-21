@@ -864,3 +864,133 @@ function initPremiumScrollAnimations() {
         });
     }
 })();
+
+// ── Mobile Service Card Accordion ────────────────────────────────
+(function initMobileAccordion() {
+    const MOBILE_BREAKPOINT = 768;
+
+    function isMobile() {
+        return window.innerWidth <= MOBILE_BREAKPOINT;
+    }
+
+    let accordionInitialized = false;
+
+    function buildAccordion() {
+        if (accordionInitialized || !isMobile()) return;
+        accordionInitialized = true;
+
+        const cards = document.querySelectorAll('.svc-vault .svc-card');
+        if (!cards.length) return;
+
+        cards.forEach((card, index) => {
+            // Already has accordion markup?
+            if (card.querySelector('.svc-accordion-header')) return;
+
+            const icon = card.querySelector('.svc-card-icon');
+            const body = card.querySelector('.svc-card-body');
+            if (!icon || !body) return;
+
+            const h3 = body.querySelector('h3');
+            const p  = body.querySelector('p');
+            const a  = body.querySelector('a');
+
+            const titleText = h3 ? h3.textContent : '';
+            const descText  = p  ? p.textContent  : '';
+            const linkHref  = a  ? a.getAttribute('href') : '#contact';
+            const linkText  = a  ? a.textContent.trim()    : 'Explore Service →';
+
+            // Build header
+            const header = document.createElement('div');
+            header.className = 'svc-accordion-header';
+
+            // Move the actual icon into the header
+            const iconClone = icon.cloneNode(true);
+            header.appendChild(iconClone);
+
+            // Title span
+            const titleEl = document.createElement('span');
+            titleEl.className = 'svc-accordion-title';
+            titleEl.textContent = titleText;
+            header.appendChild(titleEl);
+
+            // Chevron SVG
+            const chevron = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            chevron.setAttribute('class', 'svc-accordion-chevron');
+            chevron.setAttribute('viewBox', '0 0 24 24');
+            chevron.setAttribute('fill', 'none');
+            chevron.setAttribute('stroke', 'currentColor');
+            chevron.setAttribute('stroke-width', '2.2');
+            chevron.setAttribute('stroke-linecap', 'round');
+            chevron.innerHTML = '<polyline points="6 9 12 15 18 9"/>';
+            header.appendChild(chevron);
+
+            // Build body
+            const accBody = document.createElement('div');
+            accBody.className = 'svc-accordion-body';
+
+            const descEl = document.createElement('p');
+            descEl.textContent = descText;
+            accBody.appendChild(descEl);
+
+            const linkEl = document.createElement('a');
+            linkEl.href = linkHref;
+            linkEl.className = 'svc-link';
+            linkEl.innerHTML = linkText + ' <span>→</span>';
+            accBody.appendChild(linkEl);
+
+            // Insert before the existing card-body (which CSS hides)
+            card.insertBefore(header, body);
+            card.insertBefore(accBody, body);
+
+            // Hide original icon too
+            icon.style.display = 'none';
+
+            // Open first card by default
+            if (index === 0) {
+                card.classList.add('accordion-open');
+            }
+
+            // Toggle on tap
+            header.addEventListener('click', () => {
+                const isOpen = card.classList.contains('accordion-open');
+
+                // Close all cards (one-open-at-a-time accordion)
+                cards.forEach(c => c.classList.remove('accordion-open'));
+
+                // Toggle the tapped one
+                if (!isOpen) {
+                    card.classList.add('accordion-open');
+
+                    // Smooth scroll to keep header in view
+                    requestAnimationFrame(() => {
+                        const rect = card.getBoundingClientRect();
+                        const scrollTop = window.scrollY + rect.top - 80; // 80px nav offset
+                        window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+                    });
+                }
+            });
+        });
+    }
+
+    // Run on DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', buildAccordion);
+    } else {
+        // Run with slight delay to let the GSAP svc-vault setup settle first
+        setTimeout(buildAccordion, 300);
+    }
+
+    // Responsive: re-check on resize (user rotates phone, etc.)
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (!isMobile() && accordionInitialized) {
+                // Restore desktop state: remove accordion classes
+                document.querySelectorAll('.svc-card').forEach(c => {
+                    c.classList.remove('accordion-open');
+                });
+            }
+        }, 200);
+    });
+})();
