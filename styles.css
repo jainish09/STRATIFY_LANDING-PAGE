@@ -825,7 +825,7 @@ body.intro-complete .tagline-section {
 .svc-intro-inner {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 0 64px;
+  padding: 0 40px;
   display: grid;
   grid-template-columns: 1.2fr 1.4fr;
   align-items: flex-start;
@@ -1086,6 +1086,7 @@ body.intro-complete .tagline-section {
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   padding-bottom: 40px;
+  min-width: 0;
 }
 
 /* ── Individual Card ── */
@@ -1846,10 +1847,52 @@ body.intro-complete .tagline-section {
 
 
 /* ═══════════════════════════════════════════
+   SERVICES MEGA WRAP (JS-injected) — Mobile Override
+   The GSAP animation places services-intro and svc-vault
+   in a CSS grid overlay (gridArea 1/1) for desktop.
+   On mobile we must undo this so they stack vertically.
+═══════════════════════════════════════════ */
+@media(max-width: 768px) {
+  .services-mega-wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: unset !important;
+    grid-template-rows: unset !important;
+  }
+
+  .services-mega-wrap .services-intro,
+  .services-mega-wrap .svc-vault {
+    grid-area: unset !important;
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important;
+    background-color: inherit !important;
+  }
+
+  /* Ensure correct backgrounds when sections stack */
+  .services-mega-wrap .services-intro {
+    background: var(--black) !important;
+  }
+
+  .services-mega-wrap .svc-vault {
+    background: var(--off-white) !important;
+  }
+
+  /* Hide clone layer used by GSAP flip animation */
+  .services-clones-wrap {
+    display: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════════ */
 @media(max-width:1024px) {
   .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .svc-cards-wrap {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -1885,6 +1928,11 @@ body.intro-complete .tagline-section {
   .about-visual {
     display: none;
   }
+
+  .svc-intro-inner {
+    padding: 0 32px;
+    gap: 48px;
+  }
 }
 
 @media(max-width:768px) {
@@ -1893,7 +1941,7 @@ body.intro-complete .tagline-section {
   }
 
   .container {
-    padding: 0 24px;
+    padding: 0 20px;
   }
 
   .nav-links,
@@ -1915,6 +1963,22 @@ body.intro-complete .tagline-section {
 
   .services-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* Services cards: 2 columns on tablet */
+  .svc-cards-wrap {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 0 0 32px;
+  }
+
+  .svc-stage {
+    padding: 0 20px;
+    gap: 40px;
+  }
+
+  .svc-card {
+    padding: 28px 20px;
   }
 
   .work-grid {
@@ -1952,6 +2016,41 @@ body.intro-complete .tagline-section {
   .letter-s {
     font-size: clamp(8rem, 25vw, 14rem);
   }
+
+  /* Services intro: single column + smaller padding */
+  .svc-intro-inner {
+    padding: 0 20px;
+    gap: 32px;
+  }
+
+  .svc-intro-inner::before {
+    display: none;
+  }
+
+  .svc-intro-left .svc-title {
+    font-size: 2.2rem;
+  }
+
+  /* About section aRight rings: scale down to prevent overflow */
+  .aRight {
+    width: 220px;
+    height: 220px;
+  }
+
+  .r1 {
+    width: 240px;
+    height: 240px;
+  }
+
+  .r2 {
+    width: 200px;
+    height: 200px;
+  }
+
+  /* Stats */
+  .stat-item {
+    padding: 28px 20px;
+  }
 }
 
 @media(max-width:480px) {
@@ -1965,6 +2064,55 @@ body.intro-complete .tagline-section {
 
   .tl-headline {
     font-size: 2rem;
+  }
+
+  /* Services cards: single column on phones */
+  .svc-cards-wrap {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .svc-card {
+    padding: 24px 18px;
+  }
+
+  /* Stats: 1 column on very small screens */
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-item {
+    border-right: none;
+    padding: 24px 20px;
+  }
+
+  /* Services intro tighter on phones */
+  .svc-intro-inner {
+    padding: 0 16px;
+    gap: 24px;
+  }
+
+  .services-intro {
+    padding: 60px 0 48px;
+  }
+
+  .svc-vault {
+    padding: 48px 0;
+  }
+
+  /* Hide the aRight visual entirely on very small phones to avoid overflow */
+  .aRight {
+    display: none;
+  }
+
+  /* About text should take full width */
+  .aLeft {
+    width: 100%;
+  }
+
+  #s2 {
+    padding: 40px 16px;
+    gap: 24px;
   }
 }
 

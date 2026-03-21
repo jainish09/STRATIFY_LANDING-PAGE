@@ -97,13 +97,6 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
         megaWrap.style.position = 'relative';
         megaWrap.style.backgroundColor = '#050605'; // Start purely black matching Section 1
 
-        // Use Grid so both children stack natively on top of each other
-        // The container will perfectly size itself to the tallest child (Section 2)
-        megaWrap.style.display = 'grid';
-        megaWrap.style.gridTemplateColumns = '1fr';
-        megaWrap.style.gridTemplateRows = '1fr';
-        megaWrap.style.alignItems = 'start';
-
         if (servicesIntro.parentNode) {
             servicesIntro.parentNode.insertBefore(megaWrap, servicesIntro);
             megaWrap.appendChild(servicesIntro);
@@ -111,16 +104,35 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
         }
     }
 
-    // Force overlap natively via CSS grid
-    servicesIntro.style.gridArea = '1 / 1';
-    svcVault.style.gridArea = '1 / 1';
+    // Only apply the grid overlay (stacking sections on top of each other)
+    // on desktop. On mobile we let the sections stack naturally (flex column via CSS).
+    const isDesktop = window.innerWidth > 768;
 
-    // Zero layout hacks
-    servicesIntro.style.backgroundColor = 'transparent';
-    svcVault.style.backgroundColor = 'transparent';
-    svcVault.style.marginTop = '0';
-    svcVault.style.paddingTop = '60px';
-    svcVault.style.paddingBottom = '40px';
+    if (isDesktop) {
+        // Use Grid so both children stack natively on top of each other
+        megaWrap.style.display = 'grid';
+        megaWrap.style.gridTemplateColumns = '1fr';
+        megaWrap.style.gridTemplateRows = '1fr';
+        megaWrap.style.alignItems = 'start';
+
+        // Force overlap natively via CSS grid
+        servicesIntro.style.gridArea = '1 / 1';
+        svcVault.style.gridArea = '1 / 1';
+
+        // Zero layout hacks — remove backgrounds so GSAP can tween megaWrap bg
+        servicesIntro.style.backgroundColor = 'transparent';
+        svcVault.style.backgroundColor = 'transparent';
+        svcVault.style.marginTop = '0';
+        svcVault.style.paddingTop = '60px';
+        svcVault.style.paddingBottom = '40px';
+    } else {
+        // Mobile: ensure sections display normally (stacked, own backgrounds)
+        megaWrap.style.display = '';
+        servicesIntro.style.gridArea = '';
+        svcVault.style.gridArea = '';
+        servicesIntro.style.backgroundColor = '';
+        svcVault.style.backgroundColor = '';
+    }
 
     let mm = gsap.matchMedia();
 
