@@ -861,17 +861,71 @@ body.intro-complete .tagline-section {
 .svc-compact-item {
   position: relative;
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  align-items: flex-start;
   padding: 16px 24px;
   background: var(--white);
-  border-radius: 999px;
-  /* Very rounded pill shape from screenshot */
+  border-radius: 999px; /* Desktop pill shape */
   border: 1px solid rgba(0, 0, 0, 0.06);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.3s var(--ease);
+  transition: all 0.4s var(--ease);
+  overflow: hidden;
+}
+
+.svc-compact-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 16px;
+  user-select: none;
+}
+
+.svc-compact-body {
+  width: 100%;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s var(--ease), opacity 0.3s ease, padding 0.3s ease;
+  padding: 0;
+}
+
+.svc-compact-item.accordion-open {
+  border-radius: 24px;
+  border-color: var(--green-bright);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.svc-compact-item.accordion-open .svc-compact-body {
+  max-height: 400px;
+  opacity: 1;
+  padding: 16px 0 8px;
+}
+
+.svc-compact-body p {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--gray-600);
+  margin-bottom: 16px;
+}
+
+.svc-compact-chevron {
+  width: 20px;
+  height: 20px;
+  margin-left: auto;
+  color: var(--gray-400);
+  transition: transform 0.4s var(--ease), color 0.3s ease;
+  display: none; /* Hidden on desktop */
+}
+
+.svc-compact-item.accordion-open .svc-compact-chevron {
+  transform: rotate(180deg);
+  color: var(--green-bright);
+}
+
+.svc-compact-item.accordion-open .svc-compact-title {
+  color: var(--green-mid);
 }
 
 .svc-compact-index {
@@ -2113,6 +2167,34 @@ body.intro-complete .tagline-section {
   #s2 {
     padding: 40px 16px;
     gap: 24px;
+  }
+
+  /* ── Mobile Accordion Improvements ── */
+  .svc-vault {
+    display: none !important;
+  }
+
+  .svc-compact-item {
+    border-radius: 20px;
+    padding: 18px 20px;
+  }
+
+  .svc-compact-chevron {
+    display: block; /* Show chevron only on mobile */
+  }
+
+  .svc-compact-list {
+    margin-top: 20px;
+  }
+
+  .services-intro {
+    background: var(--black) !important;
+    padding-bottom: 60px;
+  }
+
+  .svc-intro-sub {
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
 }
 

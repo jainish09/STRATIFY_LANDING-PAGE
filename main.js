@@ -81,15 +81,12 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
 
+    // 1. Structural Setup: Create megaWrap if it doesn't exist
+    let megaWrap = document.querySelector('.services-mega-wrap');
     const servicesIntro = document.querySelector('.services-intro');
     const svcVault = document.querySelector('.svc-vault');
-    const compactItems = gsap.utils.toArray('.services-intro .svc-compact-item');
-    const cards = gsap.utils.toArray('.svc-vault .svc-card');
-
-    if (!servicesIntro || !svcVault || !compactItems.length || !cards.length) return;
-
-    // 1. Structural Setup: Grid Overlap to guarantee mathematically perfect pinning height.
-    let megaWrap = document.querySelector('.services-mega-wrap');
+    const compactItems = document.querySelectorAll('.svc-compact-item'); // Assuming these are defined elsewhere or globally accessible
+    const cards = document.querySelectorAll('.svc-card'); // Assuming these are defined elsewhere or globally accessible
 
     if (!megaWrap) {
         megaWrap = document.createElement('div');
@@ -97,46 +94,29 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
         megaWrap.style.position = 'relative';
         megaWrap.style.backgroundColor = '#050605'; // Start purely black matching Section 1
 
-        if (servicesIntro.parentNode) {
+        if (servicesIntro && svcVault && servicesIntro.parentNode) {
             servicesIntro.parentNode.insertBefore(megaWrap, servicesIntro);
             megaWrap.appendChild(servicesIntro);
             megaWrap.appendChild(svcVault);
         }
     }
 
-    // Only apply the grid overlay (stacking sections on top of each other)
-    // on desktop. On mobile we let the sections stack naturally (flex column via CSS).
-    const isDesktop = window.innerWidth > 768;
+    // Move all structural layout logic into matchMedia so it responds to resize/rotation correctly.
+    let mm = gsap.matchMedia();
 
-    if (isDesktop) {
-        // Use Grid so both children stack natively on top of each other
+    mm.add("(min-width: 769px)", () => {
+        // --- DESKTOP: Activate Grid Overlap & Flip Animation ---
         megaWrap.style.display = 'grid';
         megaWrap.style.gridTemplateColumns = '1fr';
         megaWrap.style.gridTemplateRows = '1fr';
         megaWrap.style.alignItems = 'start';
 
-        // Force overlap natively via CSS grid
         servicesIntro.style.gridArea = '1 / 1';
         svcVault.style.gridArea = '1 / 1';
-
-        // Zero layout hacks — remove backgrounds so GSAP can tween megaWrap bg
         servicesIntro.style.backgroundColor = 'transparent';
         svcVault.style.backgroundColor = 'transparent';
-        svcVault.style.marginTop = '0';
-        svcVault.style.paddingTop = '60px';
-        svcVault.style.paddingBottom = '40px';
-    } else {
-        // Mobile: ensure sections display normally (stacked, own backgrounds)
-        megaWrap.style.display = '';
-        servicesIntro.style.gridArea = '';
-        svcVault.style.gridArea = '';
-        servicesIntro.style.backgroundColor = '';
-        svcVault.style.backgroundColor = '';
-    }
+        svcVault.style.display = 'block';
 
-    let mm = gsap.matchMedia();
-
-    mm.add("(min-width: 769px)", () => {
         const clonesMap = [];
         let cloneWrap = document.querySelector('.services-clones-wrap');
 
@@ -307,7 +287,18 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     });
 
     mm.add("(max-width: 768px)", () => {
-        gsap.set([compactItems, cards], { opacity: 1, y: 0, scale: 1 });
+        // --- MOBILE: Linear Stack & Accordion Mode ---
+        megaWrap.style.display = 'block';
+        servicesIntro.style.gridArea = 'auto';
+        servicesIntro.style.opacity = '1';
+        servicesIntro.style.pointerEvents = 'auto';
+        
+        // Hide the vault (cards) section as requested - we use the accordion instead.
+        svcVault.style.display = 'none';
+
+        return () => {
+            svcVault.style.display = '';
+        };
     });
 })();
 
@@ -873,123 +864,60 @@ function initPremiumScrollAnimations() {
         return window.innerWidth <= MOBILE_BREAKPOINT;
     }
 
-    let accordionInitialized = false;
+    const items = document.querySelectorAll('.svc-compact-item');
+    if (!items.length) return;
 
-    function buildAccordion() {
-        if (accordionInitialized || !isMobile()) return;
-        accordionInitialized = true;
+    function toggleAccordion(item) {
+        if (!isMobile()) return;
 
-        const cards = document.querySelectorAll('.svc-vault .svc-card');
-        if (!cards.length) return;
+        const isOpen = item.classList.contains('accordion-open');
 
-        cards.forEach((card, index) => {
-            // Already has accordion markup?
-            if (card.querySelector('.svc-accordion-header')) return;
+        // Close all items first (accordion behavior: one open at a time)
+        items.forEach(i => i.classList.remove('accordion-open'));
 
-            const icon = card.querySelector('.svc-card-icon');
-            const body = card.querySelector('.svc-card-body');
-            if (!icon || !body) return;
-
-            const h3 = body.querySelector('h3');
-            const p  = body.querySelector('p');
-            const a  = body.querySelector('a');
-
-            const titleText = h3 ? h3.textContent : '';
-            const descText  = p  ? p.textContent  : '';
-            const linkHref  = a  ? a.getAttribute('href') : '#contact';
-            const linkText  = a  ? a.textContent.trim()    : 'Explore Service →';
-
-            // Build header
-            const header = document.createElement('div');
-            header.className = 'svc-accordion-header';
-
-            // Move the actual icon into the header
-            const iconClone = icon.cloneNode(true);
-            header.appendChild(iconClone);
-
-            // Title span
-            const titleEl = document.createElement('span');
-            titleEl.className = 'svc-accordion-title';
-            titleEl.textContent = titleText;
-            header.appendChild(titleEl);
-
-            // Chevron SVG
-            const chevron = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            chevron.setAttribute('class', 'svc-accordion-chevron');
-            chevron.setAttribute('viewBox', '0 0 24 24');
-            chevron.setAttribute('fill', 'none');
-            chevron.setAttribute('stroke', 'currentColor');
-            chevron.setAttribute('stroke-width', '2.2');
-            chevron.setAttribute('stroke-linecap', 'round');
-            chevron.innerHTML = '<polyline points="6 9 12 15 18 9"/>';
-            header.appendChild(chevron);
-
-            // Build body
-            const accBody = document.createElement('div');
-            accBody.className = 'svc-accordion-body';
-
-            const descEl = document.createElement('p');
-            descEl.textContent = descText;
-            accBody.appendChild(descEl);
-
-            const linkEl = document.createElement('a');
-            linkEl.href = linkHref;
-            linkEl.className = 'svc-link';
-            linkEl.innerHTML = linkText + ' <span>→</span>';
-            accBody.appendChild(linkEl);
-
-            // Insert before the existing card-body (which CSS hides)
-            card.insertBefore(header, body);
-            card.insertBefore(accBody, body);
-
-            // Hide original icon too
-            icon.style.display = 'none';
-
-            // Open first card by default
-            if (index === 0) {
-                card.classList.add('accordion-open');
-            }
-
-            // Toggle on tap
-            header.addEventListener('click', () => {
-                const isOpen = card.classList.contains('accordion-open');
-
-                // Close all cards (one-open-at-a-time accordion)
-                cards.forEach(c => c.classList.remove('accordion-open'));
-
-                // Toggle the tapped one
-                if (!isOpen) {
-                    card.classList.add('accordion-open');
-
-                    // Smooth scroll to keep header in view
-                    requestAnimationFrame(() => {
-                        const rect = card.getBoundingClientRect();
-                        const scrollTop = window.scrollY + rect.top - 80; // 80px nav offset
-                        window.scrollTo({ top: scrollTop, behavior: 'smooth' });
-                    });
+        // If it wasn't open, open it
+        if (!isOpen) {
+            item.classList.add('accordion-open');
+            
+            // Optional: Smooth scroll the opened item into better view
+            setTimeout(() => {
+                const rect = item.getBoundingClientRect();
+                const offset = 100; // room for top nav
+                if (rect.top < offset || rect.bottom > window.innerHeight) {
+                    window.scrollBy({ top: rect.top - offset, behavior: 'smooth' });
                 }
-            });
+            }, 350);
+        }
+    }
+
+    // Initialize toggle for each item
+    items.forEach((item, index) => {
+        // Open first item by default on mobile for better visibility
+        if (index === 0 && isMobile()) {
+            item.classList.add('accordion-open');
+        }
+
+        // Add click listener
+        item.addEventListener('click', (e) => {
+            // If user clicked a link inside, let it happen
+            if (e.target.tagName.toLowerCase() === 'a' || e.target.closest('a')) return;
+            
+            toggleAccordion(item);
         });
-    }
+    });
 
-    // Run on DOM ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', buildAccordion);
-    } else {
-        // Run with slight delay to let the GSAP svc-vault setup settle first
-        setTimeout(buildAccordion, 300);
-    }
-
-    // Responsive: re-check on resize (user rotates phone, etc.)
+    // Handle window resize (e.g. rotation)
     let resizeTimer;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-            if (!isMobile() && accordionInitialized) {
-                // Restore desktop state: remove accordion classes
-                document.querySelectorAll('.svc-card').forEach(c => {
-                    c.classList.remove('accordion-open');
-                });
+            if (!isMobile()) {
+                // Clear accordion state on desktop
+                items.forEach(i => i.classList.remove('accordion-open'));
+            } else {
+                // Ensure at least one is open if none are
+                const anyOpen = Array.from(items).some(i => i.classList.contains('accordion-open'));
+                if (!anyOpen) items[0].classList.add('accordion-open');
             }
         }, 200);
     });
