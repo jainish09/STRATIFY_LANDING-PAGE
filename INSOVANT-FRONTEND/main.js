@@ -371,16 +371,24 @@ document.querySelectorAll('.work-card').forEach(card => {
 
     try {
         console.log('[Newsletter] Fetching from Firestore...');
-        const querySnapshot = await window.db.collection('linkedin_newsletters')
-            .orderBy('published_at', 'desc')
-            .limit(3)
-            .get();
+        // Fetch all to sort properly by date locally, bypassing Firebase string-sort limitations
+        const querySnapshot = await window.db.collection('linkedin_newsletters').get();
 
         console.log(`[Newsletter] Query complete. Found ${querySnapshot.size} documents.`);
-        const newsletters = [];
+        let newsletters = [];
         querySnapshot.forEach(doc => {
             newsletters.push({ id: doc.id, ...doc.data() });
         });
+
+        // Sort properly by parsed date descending
+        newsletters.sort((a, b) => {
+            const dateA = new Date(a.published_at).getTime() || 0;
+            const dateB = new Date(b.published_at).getTime() || 0;
+            return dateB - dateA; // latest first
+        });
+
+        // Limit to latest 3
+        newsletters = newsletters.slice(0, 3);
 
         if (newsletters && newsletters.length > 0) {
             grid.innerHTML = ''; // Clear loading message
@@ -742,9 +750,12 @@ function initPremiumScrollAnimations() {
     let triggered = false;
 
     function onScroll() {
-        // It's possible for offsetTop to change if layout shifts, so check every tick
         const wrapTop = wrap.offsetTop;
-        const range = window.innerHeight * 3; // 420vh total height (320vh of scrollable range over sticky)
+        const totalHeight = wrap.offsetHeight;
+        const viewportHeight = window.innerHeight;
+        
+        // The scrollable range is the total height minus one viewport (the sticky part)
+        const range = Math.max(viewportHeight, totalHeight - viewportHeight);
         const raw = (window.scrollY - wrapTop) / range;
         const p = clamp(raw, 0, 1);
 
@@ -754,7 +765,9 @@ function initPremiumScrollAnimations() {
         const labelAlpha = clamp(ease(labelPhase) - ease(labelFade), 0, 1);
         flLabel.style.opacity = labelAlpha;
 
-        const labelScale = 0.8 + ease(labelPhase) * 0.2;
+        const isMobile = window.innerWidth <= 768;
+        const mobileScale = isMobile ? 0.7 : 1.0;
+        const labelScale = (0.8 + ease(labelPhase) * 0.2) * mobileScale;
         flLabel.style.transform = `translate(-50%, -50%) scale(${labelScale})`;
 
         // Trigger CSS reveals inside s2 when hole fully opens
@@ -926,3 +939,7 @@ function initPremiumScrollAnimations() {
         }, 200);
     });
 })();
+
+
+
+

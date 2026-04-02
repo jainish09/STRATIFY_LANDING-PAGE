@@ -40,7 +40,7 @@ async function fetchNewsletters() {
         for (const item of items) {
             const title = item.title;
             const link = item.link;
-            const date = item.pubDate;
+            const date = item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString();
 
             let imageUrl = null;
             if (item.mediaContent && item.mediaContent['$'] && item.mediaContent['$'].url) {
@@ -84,8 +84,8 @@ async function fetchNewsletters() {
 // 1. Run immediately
 fetchNewsletters();
 
-// 2. Schedule every 30 minutes
-cron.schedule('*/30 * * * *', () => {
+// 2. Schedule every 6 hours
+cron.schedule('0 */6 * * *', () => {
     fetchNewsletters();
 });
 
