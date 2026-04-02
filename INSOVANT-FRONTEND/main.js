@@ -27,8 +27,28 @@
 // ── Smooth scroll ─────────────────────────────
 document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', function (e) {
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        const href = this.getAttribute('href');
+        if (href === '#about') {
+            e.preventDefault();
+            const txWrap = document.getElementById('txWrap');
+            if (txWrap) {
+                // Calculate the exact reveal point
+                const wrapTop = txWrap.offsetTop;
+                const totalHeight = txWrap.offsetHeight;
+                const viewportHeight = window.innerHeight;
+                const range = totalHeight - viewportHeight;
+                // Target p = 0.75 for full reveal (skips initial black ink)
+                const targetY = wrapTop + (range * 0.75);
+                window.scrollTo({ top: targetY, behavior: 'smooth' });
+            }
+            return;
+        }
+
+        const target = document.querySelector(href);
+        if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     });
 });
 

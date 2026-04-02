@@ -107,7 +107,13 @@ ul {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 48px;
+  padding: 0 24px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 48px;
+  }
 }
 
 section {
