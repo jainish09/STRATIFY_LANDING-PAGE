@@ -1,8 +1,8 @@
 /* ════════════════════════════════════════════
-   STRATIFY – script.js  (Corrected Stage Order)
+   INSOVANT – script.js  (Corrected Stage Order)
 
    STAGE 1 — 0–33% scroll:
-     • FULL "STRATIFY" stays visible
+     • FULL "INSOVANT" stays visible
      • S shakes in place (no scale, others untouched)
 
    STAGE 2 — 33–66% scroll:
@@ -63,7 +63,7 @@ const easeIO = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 // HELPERS
 // ════════════════════════════════════════════
 function goToMain() {
-  sessionStorage.setItem('stratify_intro_done', '1');
+  sessionStorage.setItem('insovant_intro_done', '1');
   window.location.href = 'main.html'; // immediate — no setTimeout delay
 }
 
@@ -119,16 +119,16 @@ document.getElementById('skipBtn')?.addEventListener('click', () => triggerBoom(
   if (!spacer || !wordmark || !sEl) return;
 
   const letters = Array.from(wordmark.querySelectorAll('.wl'));
-  // Non-S letters (idx 1-7 = T R A T I F Y)
+  // Non-S letters (I, N, O, V, A, N, T) map to various exit directions
   const exits = [
-    null,
-    { tx: -220, ty: -100 }, // T
-    { tx: -290, ty: 70 }, // R
-    { tx: -100, ty: 155 }, // A
-    { tx: 155, ty: -125 }, // T
-    { tx: 235, ty: 90 }, // I
-    { tx: 280, ty: -70 }, // F
-    { tx: 130, ty: 165 }, // Y
+    { tx: -290, ty: -100 }, // I
+    { tx: -220, ty: 70 },   // N
+    null,                   // S (skips)
+    { tx: 155, ty: -125 },  // O
+    { tx: 235, ty: 90 },    // V
+    { tx: 280, ty: -70 },   // A
+    { tx: 130, ty: 165 },   // N
+    { tx: 180, ty: -155 }   // T
   ];
 
   const S1 = 0.33; // Stage 1: 0 → 33%
@@ -143,7 +143,7 @@ document.getElementById('skipBtn')?.addEventListener('click', () => triggerBoom(
     // Scroll hint — hide after first movement
     if (scrollHint) scrollHint.style.opacity = (1 - clamp(p / .03, 0, 1)).toString();
 
-    // ── STAGE 1 (0 – 33%): S shakes, TRATIFY untouched ──────────────
+    // ── STAGE 1 (0 – 33%): S shakes, INSOVANT untouched ──────────────
     if (p <= S1) {
       // Keep ALL letters fully visible
       letters.forEach(el => {
@@ -162,7 +162,7 @@ document.getElementById('skipBtn')?.addEventListener('click', () => triggerBoom(
       // Don't override transform here — the keyframe is applied via class
     }
 
-    // ── STAGE 2 (33% – 66%): S slightly bigger (1.15×) + heavy shake, TRATIFY exits ──
+    // ── STAGE 2 (33% – 66%): S slightly bigger (1.15×) + heavy shake, INSOVANT exits ──
     else if (p <= S2 && !boomFired) {
       const s2 = (p - S1) / (S2 - S1);  // 0→1 within stage 2
       const s2e = easeIO(s2);
@@ -172,15 +172,17 @@ document.getElementById('skipBtn')?.addEventListener('click', () => triggerBoom(
       sEl.classList.add('shake-heavy');
       sEl.style.transform = ''; // let keyframe handle it entirely
 
-      // TRATIFY dissolves as stage 2 progresses
+      // INSOVANT dissolves as stage 2 progresses
+      let exitIdx = 0;
       letters.forEach((el, idx) => {
-        if (idx === 0) return; // skip S
-        const stagger = clamp((s2e - (idx - 1) * .06) / .8, 0, 1);
+        if (el.id === 'letterS') return; // skip S
+        const stagger = clamp((s2e - exitIdx * .06) / .8, 0, 1);
         const sv = easeIO(stagger);
         const v = exits[idx];
         el.style.opacity = (1 - sv).toString();
         el.style.transform = `translate(${v.tx * sv}px,${v.ty * sv}px) scale(${1 - sv * .3})`;
         el.style.filter = `blur(${sv * 9}px)`;
+        exitIdx++;
       });
     }
 

@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════
-   STRATIFY – styles.css
+   INSOVANT – styles.css
    Cinematic Design System
    ════════════════════════════════════════════ */
 
@@ -358,7 +358,7 @@ section {
   }
 }
 
-/* ── STRATIFY wordmark ────────────────────── */
+/* ── INSOVANT wordmark ────────────────────── */
 /* Outer: handles absolute centering (never animated)
    Inner: handles the entrance animation */
 .wordmark {
@@ -2837,7 +2837,7 @@ body.intro-complete .tagline-section {
   pointer-events: none;
 }
 
-/* ══ "ABOUT STRATIFY" floating text on ink ══ */
+/* ══ "ABOUT INSOVANT" floating text on ink ══ */
 #floatingLabel {
   position: absolute;
   z-index: 20;
@@ -2916,3 +2916,4 @@ body.intro-complete .tagline-section {
         box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
     }
 }
+

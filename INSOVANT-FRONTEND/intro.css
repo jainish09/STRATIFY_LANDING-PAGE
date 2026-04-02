@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════
-   STRATIFY – intro.css   (S-in-place edition)
+   INSOVANT – intro.css   (S-in-place edition)
    ════════════════════════════════════════════ */
 
 :root {
@@ -171,7 +171,7 @@ body {
    JS adds shake classes; transform-origin = centre
    ════════════════════════════════════════════ */
 .wl-s {
-    /* Plain white — same as all other STRATIFY letters */
+    /* Plain white — same as all other INSOVANT letters */
     position: relative;
     z-index: 10;
     transform-origin: 50% 50%;

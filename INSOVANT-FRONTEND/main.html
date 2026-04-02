@@ -6,21 +6,21 @@
        redirect back to the cinematic intro on index.html -->
     <script>
         (function () {
-            var flag = sessionStorage.getItem('stratify_intro_done');
+            var flag = sessionStorage.getItem('insovant_intro_done');
             if (!flag) {
                 // No intro flag → send to intro page
                 window.location.replace('index.html');
             } else {
                 // Consume the flag so the next reload also goes to intro
-                sessionStorage.removeItem('stratify_intro_done');
+                sessionStorage.removeItem('insovant_intro_done');
             }
         })();
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STRATIFY – Premium Growth Agency</title>
+    <title>INSOVANT – Premium Growth Agency</title>
     <meta name="description"
-        content="STRATIFY is a premium hybrid marketing agency that engineers growth strategies to scale your brand to new heights." />
+        content="INSOVANT is a premium hybrid marketing agency that engineers growth strategies to scale your brand to new heights." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -61,8 +61,7 @@
     <nav class="navbar scrolled" id="navbar">
         <div class="nav-inner">
             <a href="index.html" class="nav-logo">
-                <span class="logo-mark">S</span>
-                <span class="logo-text">STRATIFY</span>
+                <span class="logo-text">INSOVANT</span>
             </a>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#services">Services</a></li>
@@ -106,7 +105,7 @@
                     That Drive Growth.
                 </h1>
                 <p class="hero-sub">
-                    STRATIFY fuses your internal metrics, AI-powered diagnosis, and real-time market intelligence 
+                    INSOVANT fuses your internal metrics, AI-powered diagnosis, and real-time market intelligence 
                     to give Seed-to-Series A founders the clarity they need to scale
                 </p>
                 <div class="hero-actions">
@@ -136,7 +135,7 @@
                                         <span class="dot yellow"></span>
                                         <span class="dot green"></span>
                                     </div>
-                                    <div class="glass-title">Stratify Analytics</div>
+                                    <div class="glass-title">Insovant Analytics</div>
                                 </div>
                                 <div class="glass-body">
                                     <div class="chart-container">
@@ -415,38 +414,44 @@
     ═══════════════════════════════════════════ -->
     <div id="scroll-reveal-wrap" style="position: relative; overflow: hidden;">
         <!-- ═══════════════════════════════════════════
-           STATS STRIP
+           NAME BREAKDOWN STRIP (INSOVANT SIMPLE)
         ═══════════════════════════════════════════ -->
         <section class="stats-strip section-dark animate-section" data-animation-duration="1400" 
-                 style="position: absolute; top: 0; left: 0; width: 100%; z-index: 2;">
+                 style="position: absolute; top: 0; left: 0; width: 100%; z-index: 2; padding: 8rem 0; background: #050605;">
             <div class="container">
-                <div class="stats-grid">
-                    <div class="stat-item" data-aos="fade-up" data-aos-delay="0">
-                        <div class="stat-accent-line"></div>
-                        <div class="stat-val" data-target="200">0</div>
-                        <div class="stat-unit">+</div>
-                        <div class="stat-label">Brands Scaled</div>
+                
+                <div class="simple-header" data-aos="fade-up" style="text-align: center; margin-bottom: 5rem;">
+                    <span style="font-size: 0.8rem; letter-spacing: 0.2em; color: #6ECB8A; text-transform: uppercase; font-weight: 700;">Creative Breakdown</span>
+                    <h3 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -0.02em; margin-top: 1rem; color: #fff;">
+                        Inside The Name
+                    </h3>
+                </div>
+
+                <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); border-top: 1px solid rgba(255,255,255,0.05);">
+                    
+                    <div class="stat-item" data-aos="fade-up" data-aos-delay="0" style="padding: 3rem 1.5rem; text-align: left; border-right: 1px solid rgba(255,255,255,0.05);">
+                        <div style="width: 24px; height: 2px; background: #6ECB8A; margin-bottom: 2rem;"></div>
+                        <div class="reveal-word" style="font-size: 3.5rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem;">IN</div>
+                        <div style="font-size: 1.1rem; color: rgba(255,255,255,0.5); font-weight: 500;">In-sight / Intelligence</div>
                     </div>
-                    <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
-                        <div class="stat-accent-line"></div>
-                        <div class="stat-val" data-target="4.8">0</div>
-                        <div class="stat-unit">×</div>
-                        <div class="stat-label">Avg. ROAS Delivered</div>
+
+                    <div class="stat-item" data-aos="fade-up" data-aos-delay="100" style="padding: 3rem 1.5rem; text-align: left; border-right: 1px solid rgba(255,255,255,0.05);">
+                        <div style="width: 24px; height: 2px; background: #6ECB8A; margin-bottom: 2rem;"></div>
+                        <div class="reveal-word" style="font-size: 3.5rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem;">SO</div>
+                        <div style="font-size: 1.1rem; color: rgba(255,255,255,0.5); font-weight: 500;">Solution / Clarity</div>
                     </div>
-                    <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
-                        <div class="stat-accent-line"></div>
-                        <div class="stat-val" data-target="340">0</div>
-                        <div class="stat-unit">%</div>
-                        <div class="stat-label">Avg. Revenue Growth</div>
+
+                    <div class="stat-item" data-aos="fade-up" data-aos-delay="200" style="padding: 3rem 1.5rem; text-align: left;">
+                        <div style="width: 24px; height: 2px; background: #6ECB8A; margin-bottom: 2rem;"></div>
+                        <div class="reveal-word" style="font-size: 3.5rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem;">VANT</div>
+                        <div style="font-size: 1.1rem; color: rgba(255,255,255,0.5); font-weight: 500;">Forward / Ahead</div>
+                        <div style="font-size: 0.6rem; color: #6ECB8A; margin-top: 1rem; opacity: 0.8; letter-spacing: 0.05em;">FR: AVANT</div>
                     </div>
-                    <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
-                        <div class="stat-accent-line"></div>
-                        <div class="stat-val" data-target="98">0</div>
-                        <div class="stat-unit">%</div>
-                        <div class="stat-label">Client Retention Rate</div>
-                    </div>
+
                 </div>
             </div>
+        </section>
+        </section>
         </section>
 
         <!-- ═══════════════════════════════════════════
@@ -486,12 +491,12 @@
             <!-- SECTION 2: The Revealed Content -->
             <div id="s2">
                 <div class="aLeft">
-                    <span class="aBadge">ABOUT STRATIFY</span>
+                    <span class="aBadge">ABOUT INSOVANT</span>
                     <div style="margin-bottom:22px">
                         <div class="headline-line"><span class="headline-inner" style="transition-delay:0.05s">Built by Founders.</span></div>
                         <div class="headline-line"><span class="headline-inner" style="transition-delay:0.18s">Not Data Vendors.</span></div>
                     </div>
-                    <p class="body-reveal" style="transition-delay:0.5s">STRATIFY was built by people who sat in the founder seat — and felt the exact pain of making high-stakes decisions with incomplete, unstructured data.</p>
+                    <p class="body-reveal" style="transition-delay:0.5s">INSOVANT was built by people who sat in the founder seat — and felt the exact pain of making high-stakes decisions with incomplete, unstructured data.</p>
                     <p class="body-reveal" style="transition-delay:0.64s">No bloated dashboards. No vague reports. Just AI-powered intelligence that's always tied to a revenue or growth outcome.</p>
                     <div class="feat" style="transition-delay:0.75s">
                         <div class="fTitle"><span class="dot"></span>Radical Transparency</div>
@@ -525,9 +530,9 @@
                 </div>
             </div>
 
-            <!-- "ABOUT STRATIFY" floating on dark ink — ABOVE canvas -->
+            <!-- "ABOUT INSOVANT" floating on dark ink — ABOVE canvas -->
             <div id="floatingLabel">
-                <div class="fl-badge">ABOUT STRATIFY</div>
+                <div class="fl-badge">ABOUT INSOVANT</div>
                 <div class="fl-title">Built by Founders. <br>Not Data Vendors.</div>
             </div>
 
@@ -585,7 +590,7 @@
             <div class="fcta-inner" data-aos="fade-up">
                 <span class="section-tag tag-light">Let's Talk</span>
                 <h2 class="fcta-headline">Ready to Decode<br />Your Growth?</h2>
-                <p class="fcta-sub">Connect with a STRATIFY partner to audit your SaaS metrics and identify your
+                <p class="fcta-sub">Connect with a INSOVANT partner to audit your SaaS metrics and identify your
                     next revenue unlock — for free.</p>
                 <a href="signup.html" class="btn btn-glow btn-lg ripple">
                     <span>Connect Us</span>
@@ -607,8 +612,7 @@
             <div class="footer-top">
                 <div class="footer-brand">
                     <a href="index.html" class="nav-logo">
-                        <span class="logo-mark">S</span>
-                        <span class="logo-text">STRATIFY</span>
+                        <span class="logo-text">INSOVANT</span>
                     </a>
                     <p class="footer-tagline">Full-Stack SaaS Intelligence for Seed-to-Series A Founders.</p>
                     <div class="footer-socials">
@@ -623,7 +627,7 @@
                                 <path
                                     d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                             </svg></a>
-                        <a href="https://www.instagram.com/stratify2026?igsh=MThrM2Q1cGU1NTFpdg==" target="_blank" aria-label="Instagram" class="social-icon"><svg viewBox="0 0 24 24" fill="none"
+                        <a href="https://www.instagram.com/insovant2026?igsh=MThrM2Q1cGU1NTFpdg==" target="_blank" aria-label="Instagram" class="social-icon"><svg viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2">
                                 <rect x="2" y="2" width="20" height="20" rx="5" />
                                 <circle cx="12" cy="12" r="5" />
@@ -652,14 +656,14 @@
                 <div class="footer-links-group">
                     <h4>Contact</h4>
                     <ul>
-                        <li><a href="mailto:Stratify2026@gmail.com">Stratify2026@gmail.com</a></li>
+                        <li><a href="mailto:Insovant2026@gmail.com">Insovant2026@gmail.com</a></li>
                         <li><a href="tel:+919172915698">+91 9172915698</a></li>
                         <li><a href="#">Bangaluru, India</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2026 STRATIFY Agency. All rights reserved.</p>
+                <p>© 2026 INSOVANT Agency. All rights reserved.</p>
                 <div class="footer-legal">
                     <a href="#">Privacy Policy</a>
                     <a href="#">Terms of Service</a>

@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════
-   STRATIFY – main.js  (Main Agency Page)
+   INSOVANT – main.js  (Main Agency Page)
    ════════════════════════════════════════════ */
 'use strict';
 
@@ -32,11 +32,12 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     });
 });
 
-// ── Counter animation ─────────────────────────
+// ── Counter / Reveal animation ─────────────────────────
 (function counters() {
     const strip = document.querySelector('.stats-strip');
     if (!strip) return;
     let done = false;
+
     function countUp(el, target, dec, dur) {
         let s = null;
         (function step(ts) {
@@ -48,12 +49,33 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
             else el.textContent = dec ? target.toFixed(dec) : target.toString();
         })(performance.now());
     }
+
+    function revealText(el, dur) {
+        const text = el.textContent;
+        el.textContent = '';
+        el.style.opacity = '1';
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < text.length) {
+                el.textContent += text.charAt(i);
+                i++;
+            } else {
+                clearInterval(interval);
+            }
+        }, dur / text.length);
+    }
+
     new IntersectionObserver(([e]) => {
         if (e.isIntersecting && !done) {
             done = true;
-            document.querySelectorAll('.stat-val').forEach(el => {
+            // Handle numeric counters
+            document.querySelectorAll('.stat-val[data-target]').forEach(el => {
                 const t = parseFloat(el.dataset.target);
                 countUp(el, t, Number.isInteger(t) ? 0 : 1, 1800);
+            });
+            // Handle word reveals for INSOVANT breakdown
+            document.querySelectorAll('.reveal-word').forEach(el => {
+                revealText(el, 800);
             });
         }
     }, { threshold: 0.4 }).observe(strip);
@@ -939,6 +961,8 @@ function initPremiumScrollAnimations() {
         }, 200);
     });
 })();
+
+
 
 
 
