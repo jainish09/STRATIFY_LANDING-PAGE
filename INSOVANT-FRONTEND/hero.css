@@ -3,11 +3,7 @@
    Main page hero + navbar visibility fix
    ════════════════════════════════════════════ */
 
-/* ── Navbar always visible on main.html ── */
-.navbar.scrolled {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-}
+
 
 /* ── Main hero section ── */
 .main-hero {

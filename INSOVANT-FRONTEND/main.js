@@ -24,6 +24,56 @@
     });
 })();
 
+// ── Edge Hover Reveal ─────────────────────────────
+(function edgeHoverReveal() {
+    const navbar = document.getElementById('navbar');
+    if (!navbar) return;
+
+    // Create invisible trigger zone
+    const trigger = document.createElement('div');
+    trigger.className = 'nav-trigger-zone';
+    trigger.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 40px; z-index: 9999; background: transparent;';
+    document.body.appendChild(trigger);
+
+    // Give it a small delay so moving quickly off doesn't instantly snap
+    let hoverTimeout;
+
+    function reveal() {
+        clearTimeout(hoverTimeout);
+        navbar.classList.add('edge-reveal-active');
+        trigger.style.pointerEvents = 'none'; // prevent blocking clicks on navbar
+    }
+
+    function hide() {
+        hoverTimeout = setTimeout(() => {
+            navbar.classList.remove('edge-reveal-active');
+            trigger.style.pointerEvents = 'auto'; // re-enable hover detection
+        }, 150);
+    }
+
+    trigger.addEventListener('mouseenter', reveal);
+    trigger.addEventListener('mouseleave', hide);
+    navbar.addEventListener('mouseenter', reveal);
+    navbar.addEventListener('mouseleave', hide);
+
+    // Mobile touch support
+    // Make trigger taller on mobile so it's easier to hit despite OS UI
+    if (window.innerWidth <= 768) {
+        trigger.style.height = '70px';
+    }
+
+    trigger.addEventListener('touchstart', reveal, {passive: true});
+    // Also reveal if user drags finger into the top zone
+    trigger.addEventListener('touchmove', reveal, {passive: true}); 
+
+    document.addEventListener('touchstart', (e) => {
+        // If touching outside the navbar and trigger zone, hide the navbar
+        if (navbar.classList.contains('edge-reveal-active') && !navbar.contains(e.target) && e.target !== trigger) {
+            hide();
+        }
+    }, {passive: true});
+})();
+
 // ── Smooth scroll ─────────────────────────────
 document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', function (e) {
