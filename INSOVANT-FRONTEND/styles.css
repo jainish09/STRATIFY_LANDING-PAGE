@@ -668,6 +668,27 @@ body.intro-complete .tagline-section {
 .navbar.edge-reveal-active {
   opacity: 1 !important;
   transform: translateY(0) !important;
+  background: rgba(255, 255, 255, .97) !important;
+  backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Force nav links + logo to dark color when edge-reveal is active */
+.navbar.edge-reveal-active .nav-logo {
+  color: var(--black);
+}
+
+.navbar.edge-reveal-active .nav-links a {
+  color: var(--gray-600);
+}
+
+.navbar.edge-reveal-active .nav-links a:hover {
+  color: var(--black);
+}
+
+.navbar.edge-reveal-active .hamburger span {
+  background: var(--black);
 }
 
 .nav-inner {
