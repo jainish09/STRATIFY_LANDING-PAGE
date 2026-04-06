@@ -7,25 +7,26 @@ if (typeof Lenis !== 'undefined') {
         direction: 'vertical',
         gestureDirection: 'vertical',
         smoothWheel: true,
-        wheelMultiplier: 1.4, // Boosted for that "fast yet smooth" feel
+        wheelMultiplier: 1.4,
         smoothTouch: true,
-        touchMultiplier: 2.2, // Boosted for mobile as requested
+        touchMultiplier: 2.2,
         infinite: false,
     });
 
-    function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-
-    // Sync ScrollTrigger
+    // Sync ScrollTrigger — GSAP ticker is the single driver for Lenis (no double RAF)
     if (typeof ScrollTrigger !== 'undefined') {
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add((time) => {
             lenis.raf(time * 1000);
         });
         gsap.ticker.lagSmoothing(0);
+    } else {
+        // Fallback: only use custom RAF if GSAP is not available
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
     }
 }
 
@@ -114,6 +115,22 @@ if (typeof Lenis !== 'undefined') {
 })();
 
 // ── Smooth scroll ─────────────────────────────
+// Helper: always checks 'lenis' at call-time (not at bind-time), safe against CDN race condition
+function smoothScrollTo(targetOrY, offset) {
+    if (lenis) {
+        if (typeof targetOrY === 'number') {
+            lenis.scrollTo(targetOrY);
+        } else {
+            lenis.scrollTo(targetOrY, { offset: offset || -70 });
+        }
+    } else {
+        const top = typeof targetOrY === 'number'
+            ? targetOrY
+            : targetOrY.offsetTop + (offset || -70);
+        window.scrollTo({ top, behavior: 'smooth' });
+    }
+}
+
 document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', function (e) {
         const href = this.getAttribute('href');
@@ -121,18 +138,13 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
             e.preventDefault();
             const txWrap = document.getElementById('txWrap');
             if (txWrap) {
-                // Calculate the exact reveal point
                 const wrapTop = txWrap.offsetTop;
                 const totalHeight = txWrap.offsetHeight;
                 const viewportHeight = window.innerHeight;
                 const range = totalHeight - viewportHeight;
                 // Target p = 0.75 for full reveal (skips initial black ink)
                 const targetY = wrapTop + (range * 0.75);
-                if (lenis) {
-                    lenis.scrollTo(targetY);
-                } else {
-                    window.scrollTo({ top: targetY, behavior: 'smooth' });
-                }
+                smoothScrollTo(targetY);
             }
             return;
         }
@@ -140,17 +152,11 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
         const target = document.querySelector(href);
         if (target) {
             e.preventDefault();
-            if (lenis) {
-                lenis.scrollTo(target, { offset: -70 });
-            } else {
-                window.scrollTo({
-                    top: target.offsetTop - 70,
-                    behavior: 'smooth'
-                });
-            }
+            smoothScrollTo(target, -70);
         }
     });
 });
+
 
 // ── Counter / Reveal animation ─────────────────────────
 (function counters() {
