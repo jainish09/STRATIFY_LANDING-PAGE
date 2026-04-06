@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connect Us - INSOVANT</title>
+    <title>Join Waitlist - INSOVANT</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -205,7 +205,7 @@
             <!-- Default Form View -->
             <div id="formView">
                 <div class="auth-header">
-                    <h1>Connect Us</h1>
+                    <h1>Join Waitlist</h1>
                     <p>Fill in your details and a INSOVANT partner will reach out to you.</p>
                 </div>
 
@@ -308,6 +308,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
     <!-- Custom Database Connection & Form Handling -->
     <script src="database.js"></script>
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+    <script>
+        const lenis = new Lenis({
+            duration: 1.5,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            wheelMultiplier: 1.3,
+            smoothTouch: true,
+            touchMultiplier: 2.0,
+        });
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+    </script>
 </body>
 
 </html>

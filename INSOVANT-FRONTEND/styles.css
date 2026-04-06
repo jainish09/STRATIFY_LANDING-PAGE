@@ -653,7 +653,7 @@ body.intro-complete .tagline-section {
   height: var(--nav-h);
   opacity: 0;
   transform: translateY(-20px);
-  transition: background .4s var(--ease), backdrop-filter .4s var(--ease), box-shadow .4s var(--ease);
+  transition: background .4s var(--ease), backdrop-filter .4s var(--ease), box-shadow .4s var(--ease), transform .4s var(--ease), opacity .4s ease;
   will-change: opacity, transform;
 }
 
@@ -668,7 +668,6 @@ body.intro-complete .tagline-section {
 .navbar.edge-reveal-active {
   opacity: 1 !important;
   transform: translateY(0) !important;
-  transition: transform 0.4s var(--ease), opacity 0.4s ease !important;
 }
 
 .nav-inner {

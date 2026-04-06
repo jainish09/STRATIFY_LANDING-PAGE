@@ -1,7 +1,30 @@
-/* ════════════════════════════════════════════
-   INSOVANT – main.js  (Main Agency Page)
-   ════════════════════════════════════════════ */
-'use strict';
+/* ── Premium Smooth Scroll (Lenis) ─────────────────── */
+const lenis = new Lenis({
+    duration: 1.5,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    direction: 'vertical',
+    gestureDirection: 'vertical',
+    smoothWheel: true,
+    wheelMultiplier: 1.3,
+    smoothTouch: true, 
+    touchMultiplier: 2.0,
+    infinite: false,
+});
+
+function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);
+
+// Sync ScrollTrigger
+if (typeof ScrollTrigger !== 'undefined') {
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+}
 
 // ── Navbar scroll style ───────────────────────
 (function navbarScroll() {
@@ -57,14 +80,27 @@
     navbar.addEventListener('mouseleave', hide);
 
     // Mobile touch support
-    // Make trigger taller on mobile so it's easier to hit despite OS UI
+    // Make trigger taller on mobile so it's easier to hit
     if (window.innerWidth <= 768) {
         trigger.style.height = '70px';
     }
 
-    trigger.addEventListener('touchstart', reveal, {passive: true});
-    // Also reveal if user drags finger into the top zone
-    trigger.addEventListener('touchmove', reveal, {passive: true}); 
+    trigger.addEventListener('touchstart', (e) => {
+        // Toggle behavior for mobile
+        if (navbar.classList.contains('edge-reveal-active')) {
+            hide();
+        } else {
+            reveal();
+        }
+    }, {passive: true});
+
+    // If user taps the open navbar itself (but not a link), close it
+    navbar.addEventListener('touchstart', (e) => {
+        const isClickable = e.target.closest('a') || e.target.closest('button') || e.target.tagName === 'A' || e.target.tagName === 'BUTTON';
+        if (!isClickable) {
+            hide();
+        }
+    }, {passive: true});
 
     document.addEventListener('touchstart', (e) => {
         // If touching outside the navbar and trigger zone, hide the navbar
@@ -89,7 +125,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
                 const range = totalHeight - viewportHeight;
                 // Target p = 0.75 for full reveal (skips initial black ink)
                 const targetY = wrapTop + (range * 0.75);
-                window.scrollTo({ top: targetY, behavior: 'smooth' });
+                lenis.scrollTo(targetY);
             }
             return;
         }
@@ -97,7 +133,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
         const target = document.querySelector(href);
         if (target) {
             e.preventDefault();
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            lenis.scrollTo(target, { offset: -70 });
         }
     });
 });
