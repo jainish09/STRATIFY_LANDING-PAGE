@@ -1,3 +1,7 @@
+/* ── Force page to top on load (prevents browser scroll restoration breaking navbar) ── */
+if (history.scrollRestoration) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
+
 /* ── Premium Smooth Scroll (Lenis) ─────────────────── */
 let lenis;
 if (typeof Lenis !== 'undefined') {
@@ -38,7 +42,9 @@ if (typeof Lenis !== 'undefined') {
     if (!navbar) return;
     function check() { navbar.classList.toggle('scrolled', window.scrollY > 60); }
     window.addEventListener('scroll', check, { passive: true });
-    check();
+    // Delay initial check by 50ms so scroll reset (window.scrollTo(0,0)) completes first
+    // This prevents production browsers from immediately adding 'scrolled' class on load
+    setTimeout(check, 50);
     hamburger?.addEventListener('click', () => {
         hamburger.classList.toggle('open');
         mobileMenu?.classList.toggle('open');
