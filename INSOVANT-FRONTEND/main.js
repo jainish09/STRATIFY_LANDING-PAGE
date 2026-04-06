@@ -1,29 +1,32 @@
 /* ── Premium Smooth Scroll (Lenis) ─────────────────── */
-const lenis = new Lenis({
-    duration: 1.5,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    direction: 'vertical',
-    gestureDirection: 'vertical',
-    smoothWheel: true,
-    wheelMultiplier: 1.3,
-    smoothTouch: true, 
-    touchMultiplier: 2.0,
-    infinite: false,
-});
-
-function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-}
-requestAnimationFrame(raf);
-
-// Sync ScrollTrigger
-if (typeof ScrollTrigger !== 'undefined') {
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => {
-        lenis.raf(time * 1000);
+let lenis;
+if (typeof Lenis !== 'undefined') {
+    lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: 'vertical',
+        gestureDirection: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1.4, // Boosted for that "fast yet smooth" feel
+        smoothTouch: true,
+        touchMultiplier: 2.2, // Boosted for mobile as requested
+        infinite: false,
     });
-    gsap.ticker.lagSmoothing(0);
+
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Sync ScrollTrigger
+    if (typeof ScrollTrigger !== 'undefined') {
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+    }
 }
 
 // ── Navbar scroll style ───────────────────────
@@ -125,7 +128,11 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
                 const range = totalHeight - viewportHeight;
                 // Target p = 0.75 for full reveal (skips initial black ink)
                 const targetY = wrapTop + (range * 0.75);
-                lenis.scrollTo(targetY);
+                if (lenis) {
+                    lenis.scrollTo(targetY);
+                } else {
+                    window.scrollTo({ top: targetY, behavior: 'smooth' });
+                }
             }
             return;
         }
@@ -133,7 +140,14 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
         const target = document.querySelector(href);
         if (target) {
             e.preventDefault();
-            lenis.scrollTo(target, { offset: -70 });
+            if (lenis) {
+                lenis.scrollTo(target, { offset: -70 });
+            } else {
+                window.scrollTo({
+                    top: target.offsetTop - 70,
+                    behavior: 'smooth'
+                });
+            }
         }
     });
 });
