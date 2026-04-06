@@ -467,16 +467,19 @@ document.querySelectorAll('.ripple').forEach(btn => {
     });
 });
 
-// ── Work Card Tilt ───────────────────────────
-document.querySelectorAll('.work-card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        const rx = ((e.clientY - r.top - r.height / 2) / (r.height / 2)) * 4;
-        const ry = ((e.clientX - r.left - r.width / 2) / (r.width / 2)) * -4;
-        card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`;
-    });
-    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+// ── Work Card Tilt (Event Delegation — works on dynamically created cards too) ───
+document.addEventListener('mousemove', e => {
+    const card = e.target.closest('.work-card');
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    const rx = ((e.clientY - r.top - r.height / 2) / (r.height / 2)) * 4;
+    const ry = ((e.clientX - r.left - r.width / 2) / (r.width / 2)) * -4;
+    card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`;
 });
+document.addEventListener('mouseleave', e => {
+    const card = e.target.closest('.work-card');
+    if (card) card.style.transform = '';
+}, true);
 
 // ── Glass Dashboard 3D Tilt ──────────────────────────────
 (function glassDashboardTilt() {
@@ -598,16 +601,20 @@ document.querySelectorAll('.work-card').forEach(card => {
                 }
             }
 
-            // Initialize the newly requested scroll animations now that DOM elements exist
+            // Initialize scroll animations after cards are in DOM
             initPremiumScrollAnimations();
 
         } else {
             grid.innerHTML = '<p style="text-align: center; width: 100%; color: var(--gray-500); grid-column: 1 / -1;">No newsletters found yet. Check back soon!</p>';
+            // Still initialize animations even with no newsletter cards (curtain reveal must run)
+            initPremiumScrollAnimations();
         }
 
     } catch (err) {
         console.error('Error fetching newsletters:', err);
         grid.innerHTML = '<p style="text-align: center; width: 100%; color: var(--gray-500); grid-column: 1 / -1;">Could not load newsletters at this time.</p>';
+        // Still initialize curtain animations on error
+        initPremiumScrollAnimations();
     }
 })();
 
@@ -902,9 +909,12 @@ function initPremiumScrollAnimations() {
         const totalHeight = wrap.offsetHeight;
         const viewportHeight = window.innerHeight;
         
+        // Use Lenis scroll position when available (keeps canvas in sync with smooth scroll)
+        const scrollY = (lenis && lenis.scroll !== undefined) ? lenis.scroll : window.scrollY;
+        
         // The scrollable range is the total height minus one viewport (the sticky part)
         const range = Math.max(viewportHeight, totalHeight - viewportHeight);
-        const raw = (window.scrollY - wrapTop) / range;
+        const raw = (scrollY - wrapTop) / range;
         const p = clamp(raw, 0, 1);
 
         // Floating label opacity & scale
